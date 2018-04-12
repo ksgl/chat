@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Udp_server.hpp"
 #include <boost/asio.hpp>
-#include <string>
 
 //3 параметра : порт, который слушаем, ip/hostname кому слать, dest-port
 
@@ -18,11 +17,14 @@ int main() {
 	boost::asio::io_service io_service;
 	Udp_server server(io_service, "8.8.8.8", "1337");
 
-	server.send("Hi!");
-
-	std::string& received_msg;
+	/*std::string msg;
 	server.receive(msg);
-	std::cout << msg;
+	std::cout << "Your message: " << msg;
+	
+	io_service.run();
+	*/
+
+	server.send("Hi to Google from Ksusha");
 
     return EXIT_SUCCESS;
 }

@@ -15,8 +15,6 @@ public:
     udp::resolver::query query(udp::v4(), host, port);
     udp::resolver::iterator iter = resolver.resolve(query);
     remote_endpoint_ = *iter;
-
-    start_receive();
     }
 
     ~Udp_server() {
@@ -28,7 +26,7 @@ public:
     socket_.send_to(boost::asio::buffer(msg, msg.size()), remote_endpoint_);
   }
 
-  void receive(const std::string& msg) {
+  void receive(std::string& msg) {
     socket_.receive_from(boost::asio::buffer(msg, msg.size()), remote_endpoint_);
   }
 
