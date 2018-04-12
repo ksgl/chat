@@ -16,7 +16,7 @@ public:
     udp::resolver::iterator iter = resolver.resolve(query);
     remote_endpoint_ = *iter;
 
-      //start_receive();
+    start_receive();
     }
 
     ~Udp_server() {
@@ -28,20 +28,15 @@ public:
     socket_.send_to(boost::asio::buffer(msg, msg.size()), remote_endpoint_);
   }
 
+  void receive(const std::string& msg) {
+    socket_.receive_from(boost::asio::buffer(msg, msg.size()), remote_endpoint_);
+  }
+
+
 private:
   boost::asio::io_service& io_service_;
   udp::socket socket_;
   udp::endpoint remote_endpoint_;
-  //std::vector<char> recv_buffer_;
+  std::vector<char> recv_buffer_;
 
-  /*void start_receive() {
-      socket_.async_receive_from(boost::asio::buffer(recv_buffer_), remote_endpoint_,
-        boost::bind(&udp_server::receive, this,
-          boost::asio::placeholders::error,
-          boost::asio::placeholders::bytes_transferred));
-    }*/
-
-  void receive() {
-
-  }
 };

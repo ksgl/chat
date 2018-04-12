@@ -20,6 +20,10 @@ int main() {
 
 	server.send("Hi!");
 
+	std::string& received_msg;
+	server.receive(msg);
+	std::cout << msg;
+
     return EXIT_SUCCESS;
 }
 
