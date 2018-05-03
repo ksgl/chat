@@ -4,6 +4,8 @@
 
 //3 параметра : порт, который слушаем, ip/hostname кому слать, dest-port
 
+//p2p nat
+
 int main() {
 	/*try {
 		boost::asio::io_service io_service;
