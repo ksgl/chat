@@ -1,33 +1,86 @@
+#include "UDPServer.hpp"
+
+#include <boost/asio.hpp>
+
+#include <csignal>
+#include <cstdio>
+#include <cstdlib>
+
 #include <iostream>
-#include "task_manager.hpp"
+#include <stdexcept>
 
-void tasker_1(task_manager &obj) {
-    json j;
-    j["task"] = "some fucking task";
+
+extern "C" {
     
-    for(int i = 0; i < 10; i++)
-        obj.add_task_on_queue(j);
+    void handle_critical_signal(int signal) {
+        std::fprintf(stderr, "\nImmediate shutdown on signal: %d (CRITICAL)\n", signal);
+        std::_Exit(128 + signal);
+//      std::exit(128 + signal);
+    }
+    
+} // extern "C"
+
+class MyMessageHandler : public MessageHandlerBase {
+public:
+    virtual void handle(const Message& message) override {
+        std::cout << "Received a message from " << message.from << " (for " << message.to << "): " << message.text << std::endl;
+
+        switch (<#expression#>) {
+            case <#constant#>:
+                <#statements#>
+                break;
+                
+            default:
+                break;
+        }
+    }
+    
+private:
+    
+    
+};
+
+
+int main(int argc, const char* argv[]) {
+    int exit_code = EXIT_SUCCESS;
+    
+    try {
+        // Installing the critical signal handler.
+        struct ::sigaction signal_handler;
+        std::memset(&signal_handler, 0, sizeof(signal_handler));
+        signal_handler.sa_handler = handle_critical_signal;
+//      ::sigaction(SIGBUS,  &signal_handler, nullptr);
+        ::sigaction(SIGILL,  &signal_handler, nullptr);
+        ::sigaction(SIGABRT, &signal_handler, nullptr);
+        ::sigaction(SIGFPE,  &signal_handler, nullptr);
+        ::sigaction(SIGSEGV, &signal_handler, nullptr);
+
+        MyMessageHandler my_message_handler;
+        boost::asio::io_service io_service;
+        UDPServer server(io_service);
+        
+        server.set_message_handler(&my_message_handler);
+        server.start();
+        
+        // TODO: here, submit some tasks that will (directly or indirectly) call server.send(message);
+        
+        io_service.run();
+        server.stop();
+        
+        // TODO: server.stop() may schedule some more tasks on io_service??
+        
+        // TODO: on throw, server.stop() is not called, and there will be some scheduled tasks on io_service!
+        
+    }
+    // Use fprintf here to avoid riscs of new uncaught exceptions.
+    catch (const std::exception& ex) {
+        std::fprintf(stderr, "\nError: %s\n", ex.what());
+        exit_code = EXIT_FAILURE;
+    }
+    catch (...) {
+        std::fprintf(stderr, "\nError: unknown\n");
+        exit_code = EXIT_FAILURE;
+    }
+    
+    return exit_code;
 }
-
-void tasker_2(task_manager &obj) {
-    json j;
-    j["task"] = "another fucking task";
-    
-    for(int i = 0; i < 10; i++)
-        obj.add_task_on_queue(j);
-}
-
-task_manager &task_manager_obj = task_manager::instance();
-
-int main() {
-    thread task_1(tasker_1, task_manager_obj);
-    thread task_2(tasker_2, task_manager_obj);
-    
-    task_1.join();
-    task_2.join();
-    
-    task_manager_obj.show_tasks();
-    
-    return EXIT_SUCCESS;
-}
-
