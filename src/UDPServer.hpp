@@ -1,6 +1,7 @@
 #pragma once
 
 #include "json.hpp"
+#include "Handlers.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -12,29 +13,11 @@
 #include <cassert>
 #include <cstdint>
 
-/*
-{Register, {name, pswd}}
-
-{
-    "command": "user.register",
-    "payload": {
-        "name": "jkhgkjhg"
-    }
-}
- 
- */
-
 struct Message {
     // TODO: remove/add required fields.
     boost::asio::ip::udp::endpoint from;
     boost::asio::ip::udp::endpoint to;
     nlohmann::json object;
-};
-
-class MessageHandlerBase {
-public:
-    virtual ~MessageHandlerBase() = default;
-    virtual void handle(const Message&) = 0;
 };
 
 class UDPServer {
