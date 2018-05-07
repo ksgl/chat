@@ -20,27 +20,6 @@ extern "C" {
     
 } // extern "C"
 
-class MyMessageHandler : public MessageHandlerBase {
-public:
-    virtual void handle(const Message& message) override {
-        std::cout << "Received a message from " << message.from << " (for " << message.to << "): " << message.text << std::endl;
-
-        switch (<#expression#>) {
-            case <#constant#>:
-                <#statements#>
-                break;
-                
-            default:
-                break;
-        }
-    }
-    
-private:
-    
-    
-};
-
-
 int main(int argc, const char* argv[]) {
     int exit_code = EXIT_SUCCESS;
     
