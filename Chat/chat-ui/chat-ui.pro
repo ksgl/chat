@@ -19,7 +19,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += source/main.cpp
 
-LIBS += -L$$PWD/../../build-Chat-Desktop_Qt_5_10_1_GCC_64bit-Debug/chat-lib -lchat-lib
+#LIBS += -L$$PWD/../../build-Chat-Desktop_Qt_5_10_1_GCC_64bit-Debug/chat-lib -lchat-lib
+LIBS += -L$$PWD/../../build-Chat-Desktop-Debug/chat-lib -lchat-lib
+
 
 RESOURCES += qml.qrc \
     views.qrc \

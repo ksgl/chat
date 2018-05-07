@@ -1,6 +1,6 @@
 import QtQuick 2.9
-import QtQuick.Window 2.3
-import QtQuick.Controls 2.2
+import QtQuick.Window 2.2
+import QtQuick.Controls 1.4
 import components 1.0
 import assets 1.0
 
@@ -10,7 +10,7 @@ Window {
     height: Style.heightWindow
     title: qsTr("Chat")
 
-    Connections {
+   Connections {
         target: masterController.ui_navigationController
         onGoChatListView: {
             navigationBar.visible = true;
@@ -28,12 +28,12 @@ Window {
 
     }
 
-    NavigationBar {
+   NavigationBar {
         id: navigationBar
         visible: false
     }
 
-    StackView {
+   StackView {
         id: contentFrame
         clip: true
         anchors {
