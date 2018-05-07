@@ -1,2 +1,2 @@
-add_executable(chat main.cpp Udp_server.hpp)
+add_executable(chat main.cpp)
 target_link_libraries(chat ${Boost_LIBRARIES})
