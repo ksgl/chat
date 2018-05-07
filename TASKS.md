@@ -7,11 +7,10 @@
 
 ##### Module 2
 - `task_manager` (full implementation) +
-- `service_manager`
 - command handlers
 - `net` & `app` integration to work in local network (basic threading)
 - refactoring +
-- basic `pseudo_dns`
+- basic `pseudo_dns` (+ but without db)
 - crypto
 - code review
 
