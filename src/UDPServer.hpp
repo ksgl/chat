@@ -1,7 +1,6 @@
 #pragma once
 
 #include "json.hpp"
-#include "Handlers.hpp"
 
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
@@ -13,11 +12,17 @@
 #include <cassert>
 #include <cstdint>
 
+
 struct Message {
-    // TODO: remove/add required fields.
     boost::asio::ip::udp::endpoint from;
     boost::asio::ip::udp::endpoint to;
-    nlohmann::json object;
+    nlohmann::json payload;
+};
+
+class MessageHandlerBase {
+public:
+    virtual ~MessageHandlerBase() = default;
+    virtual void handle(const Message&) = 0;
 };
 
 class UDPServer {
@@ -26,6 +31,14 @@ public:
         : socket_(io_service)
         , port_(port)
     {
+    }
+    
+    ~UDPServer() {
+        stop();
+    }
+
+    boost::asio::ip::udp::endpoint get_default_local_endpoint() const {
+        return socket_.local_endpoint();
     }
     
     void start() {
@@ -112,14 +125,14 @@ private:
     }
     
     static void serialize(const Message& message, std::vector<std::uint8_t>& buffer) {
-        auto str = message.object.dump();
+        auto str = message.payload.dump();
         buffer.reserve(buffer.size() + str.size());
         std::copy(str.begin(), str.end(), std::back_inserter(buffer));
     }
     
     static void deserialize(const std::vector<std::uint8_t>& buffer, Message& message) {
         const std::string str(buffer.begin(), buffer.end());
-        message.object = nlohmann::json::parse(str);
+        message.payload = nlohmann::json::parse(str);
     }
     
 private:

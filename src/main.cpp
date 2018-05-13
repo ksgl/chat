@@ -1,4 +1,4 @@
-#include "UDPServer.hpp"
+#include "TaskExecutor.hpp"
 
 #include <boost/asio.hpp>
 
@@ -8,7 +8,94 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <string>
+#include <algorithm>
+#include <cctype>
+#include <locale>
 
+
+namespace util {
+    // trim from start (in place)
+    static inline void ltrim(std::string &s) {
+        s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+            return !std::isspace(ch);
+        }));
+    }
+    
+    // trim from end (in place)
+    static inline void rtrim(std::string &s) {
+        s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+            return !std::isspace(ch);
+        }).base(), s.end());
+    }
+    
+    // trim from both ends (in place)
+    static inline void trim(std::string &s) {
+        ltrim(s);
+        rtrim(s);
+    }
+    
+    // trim from start (copying)
+    static inline std::string ltrim_copy(std::string s) {
+        ltrim(s);
+        return s;
+    }
+    
+    // trim from end (copying)
+    static inline std::string rtrim_copy(std::string s) {
+        rtrim(s);
+        return s;
+    }
+    
+    // trim from both ends (copying)
+    static inline std::string trim_copy(std::string s) {
+        trim(s);
+        return s;
+    }
+}
+
+class CLI {
+public:
+    explicit CLI(boost::asio::io_service& io_service)
+        : ios(io_service)
+        , tex(io_service)
+    {
+        tex.start();
+        ios.post(boost::bind(&CLI::read_line, boost::ref(*this)));
+    }
+    
+private:
+    static void read_line(CLI& cli) {
+        std::string cmd;
+        std::getline(std::cin, cmd);
+        util::trim(cmd);
+        if (cli.execute_line(cmd)) {
+            cli.ios.post(boost::bind(&CLI::read_line, boost::ref(cli)));
+        }
+        else {
+            std::cout << "Exiting..." << std::endl;
+            cli.tex.stop();
+        }
+    }
+    
+    bool execute_line(const std::string& str) {
+        if (str.empty()) {
+            return false;
+        }
+        
+        auto cmd = nlohmann::json::parse(str);
+        tex.execute_async(cmd, [this](const nlohmann::json& res){ this->process_result(res); });
+        return true;
+    }
+    
+    void process_result(const nlohmann::json& res) {
+        std::cout << res.dump() << std::endl;
+    }
+    
+private:
+    boost::asio::io_service& ios;
+    TaskExecutor tex;
+};
 
 extern "C" {
     
@@ -19,27 +106,6 @@ extern "C" {
     }
     
 } // extern "C"
-
-class MyMessageHandler : public MessageHandlerBase {
-public:
-    virtual void handle(const Message& message) override {
-        std::cout << "Received a message from " << message.from << " (for " << message.to << "): " << message.text << std::endl;
-
-        switch (<#expression#>) {
-            case <#constant#>:
-                <#statements#>
-                break;
-                
-            default:
-                break;
-        }
-    }
-    
-private:
-    
-    
-};
-
 
 int main(int argc, const char* argv[]) {
     int exit_code = EXIT_SUCCESS;
@@ -54,23 +120,11 @@ int main(int argc, const char* argv[]) {
         ::sigaction(SIGABRT, &signal_handler, nullptr);
         ::sigaction(SIGFPE,  &signal_handler, nullptr);
         ::sigaction(SIGSEGV, &signal_handler, nullptr);
-
-        MyMessageHandler my_message_handler;
+        
         boost::asio::io_service io_service;
-        UDPServer server(io_service);
-        
-        server.set_message_handler(&my_message_handler);
-        server.start();
-        
-        // TODO: here, submit some tasks that will (directly or indirectly) call server.send(message);
+        CLI cli(io_service);
         
         io_service.run();
-        server.stop();
-        
-        // TODO: server.stop() may schedule some more tasks on io_service??
-        
-        // TODO: on throw, server.stop() is not called, and there will be some scheduled tasks on io_service!
-        
     }
     // Use fprintf here to avoid riscs of new uncaught exceptions.
     catch (const std::exception& ex) {
@@ -84,3 +138,35 @@ int main(int argc, const char* argv[]) {
     
     return exit_code;
 }
+
+void task_execution() {
+    int exit_code = EXIT_SUCCESS;
+    
+    try {
+        // Installing the critical signal handler.
+        struct ::sigaction signal_handler;
+        std::memset(&signal_handler, 0, sizeof(signal_handler));
+        signal_handler.sa_handler = handle_critical_signal;
+//      ::sigaction(SIGBUS,  &signal_handler, nullptr);
+        ::sigaction(SIGILL,  &signal_handler, nullptr);
+        ::sigaction(SIGABRT, &signal_handler, nullptr);
+        ::sigaction(SIGFPE,  &signal_handler, nullptr);
+        ::sigaction(SIGSEGV, &signal_handler, nullptr);
+        
+        boost::asio::io_service io_service;
+        CLI cli(io_service);
+        
+        io_service.run();
+    }
+    // Use fprintf here to avoid riscs of new uncaught exceptions.
+    catch (const std::exception& ex) {
+        std::fprintf(stderr, "\nError: %s\n", ex.what());
+        exit_code = EXIT_FAILURE;
+    }
+    catch (...) {
+        std::fprintf(stderr, "\nError: unknown\n");
+        exit_code = EXIT_FAILURE;
+    }
+}
+
+
