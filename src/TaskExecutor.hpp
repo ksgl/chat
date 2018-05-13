@@ -10,8 +10,11 @@
 #include <string>
 #include <map>
 #include <functional>
+#include <thread>
+#include <mutex>
+#include <exception>
 
-
+// id to generate
 struct Link {
     boost::asio::ip::udp::endpoint local;
     boost::asio::ip::udp::endpoint remote;
@@ -22,7 +25,7 @@ public:
     typedef std::function<void(const nlohmann::json&)> Callback;
     
     void execute_async(const nlohmann::json& j, const Callback& callback) {
-        ios.post([this, j, callback](){ this->execute(j, callback); }); // enqueue task
+        ios.post([this, j, callback](){ this->execute(j, callback); }); // enqueue task, thread-safe
     }
 
     explicit TaskExecutor(boost::asio::io_service& io_service)
@@ -38,11 +41,23 @@ public:
 
     virtual void handle(const Message& msg) {
         auto id = msg.payload["id"].get<std::string>();
-        command_callbacks[id](msg.payload);
+        if (id no) {
+            //create json
+            oclb(js);
+        }
+        else {
+            command_callbacks[id](msg.payload);
+        }
         
         // remember endpoint from user
         // tipa messeg
         // ot kogo
+        // create payload process into json
+        // from to
+    }
+    
+    void set_orphan_message_callback(const Callback& callback) {
+        oclb = callback;
     }
     
     void start() {
@@ -60,9 +75,11 @@ private:
     UDPServer serv;
     std::map<std::string, Link> user_links; // соответствие чел <-> ip, ip of peer
     std::map<std::string, Callback> command_callbacks; // id <-> call CHECKS!
+    Callback oclb = [](const nlohmann::json&){}; // пустая функция
+    
+    std::mutex mt;
 
     void execute(const nlohmann::json& j, const Callback& callback) {
-
         auto cmd = j;
         
         // user.register
@@ -114,18 +131,99 @@ private:
             callback(res);
         }
     }
-    
-    /*
-    id : 1
-    command : hello;
-    payload : {...}
-    
-    id : 1
-    answer : fail
-    payload : {
-        reason : unknown command
-    }
-    */
+};
 
+class TaskExecuterRunner {
+public:
+    TaskExecuterRunner()
+        : task_executor_(io_service_)
+    {
+    }
     
+    ~TaskExecuterRunner() {
+        stop();
+        
+        auto ex = pop_exception();
+        if (ex) {
+            try {
+                std::rethrow_exception(ex);
+            }
+            catch (const std::exception& ex) {
+                std::printf("Task executor exception: %s", ex.what());
+            }
+            catch (...) {
+                std::printf("Task executor exception: <unknown>");
+            }
+        }
+    }
+    
+    void set_orphan_message_callback(const TaskExecutor::Callback& callback) {
+        io_service_.post([this, callback](){ this->task_executor_.set_orphan_message_callback(callback); });
+    }
+    
+    void execute_async(const nlohmann::json& j, const TaskExecutor::Callback& callback) {
+        if (!is_running()) {
+            throw std::runtime_error("task executor is not running");
+        }
+        
+        task_executor_.execute_async(j, callback);
+    }
+    
+    void start() {
+        if (is_running()) {
+            throw std::runtime_error("task executor is already running");
+        }
+        
+        io_service_.post([this](){ this->task_executor_.start(); });
+        thread_ = std::thread([this](){ this->run(); });
+    }
+    
+    void stop() {
+        if (is_running()) {
+            io_service_.post([this](){ this->task_executor_.stop(); });
+        }
+        
+        if (thread_.joinable()) {
+            thread_.join();
+        }
+        
+        thread_ = std::thread();
+        running_ = false;
+    }
+    
+    bool is_running() const {
+        return running_;
+    }
+    
+    std::exception_ptr pop_exception() {
+        if (is_running()) {
+            throw std::runtime_error("task executor is still running");
+        }
+        
+        auto ex = ex_;
+        ex_ = std::exception_ptr{};
+        
+        return ex;
+    }
+    
+private:
+    void run() {
+        running_ = true;
+        ex_ = std::exception_ptr{};
+        
+        try {
+            io_service_.run();
+        } catch (...) {
+            ex_ = std::current_exception();
+        }
+        
+        running_ = false;
+    }
+    
+private:
+    std::thread thread_;
+    std::atomic<bool> running_;
+    std::exception_ptr ex_;
+    boost::asio::io_service io_service_;
+    TaskExecutor task_executor_;
 };
