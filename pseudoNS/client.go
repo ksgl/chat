@@ -4,68 +4,110 @@ import (
 	"fmt"
 	"net"
 	"time"
-	"strconv"
+	"log"
+	"strings"
+	//"encoding/json"
 )
 
-func checkError(err error) {
+const serverAddress = "localhost"
+const port = 1337
+
+type Client struct {
+	connection          *net.UDPConn
+	alive               bool
+	sendingMessageQueue chan string
+	receiveMessages     chan string
+}
+
+func errorCheck(err error, where string, kill bool) {
 	if err != nil {
-		fmt.Println("Error: ", err)
+		log.Printf("Error: %s @ %s", err.Error(), where)
+		if kill {
+			log.Fatalln("Script Terminated")
+		}
+	}
+}
+
+// while the client is alive, if there's a message on queue, send it
+func (c *Client) sendMessage() {
+	for c.alive {
+		msg := <-c.sendingMessageQueue
+		_, err := c.connection.Write([]byte(msg))
+		errorCheck(err, "sendMessage", false)
+	}
+
+}
+
+// handles the receiving part
+func (c *Client) receiveMessage() {
+	var buffer = make([]byte, 1024)
+	for c.alive {
+		n, err := c.connection.Read(buffer[0:])
+		errorCheck(err, "receiveMessage", false)
+		c.receiveMessages <- string(buffer[0:n])
+	}
+}
+
+// separates the receiving from the processing
+func (c *Client) processMessage() {
+	for c.alive {
+		msg := <-c.receiveMessages
+		log.Printf("server [%s] sent [%s]\n", c.connection.RemoteAddr().String(), msg)
+
+		//additional processing here
+		if strings.HasPrefix(msg, ":q") || strings.HasPrefix(msg, ":quit") {
+			fmt.Printf("%s is leaving\n", c.connection.RemoteAddr().String())
+		}
 	}
 }
 
 func main() {
-	ServerAddr,err := net.ResolveUDPAddr("udp", "127.0.0.1:1337")
-	checkError(err)
+	serverAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", serverAddress, port))
+	errorCheck(err, "main", true)
 
-	LocalAddr,err := net.ResolveUDPAddr("udp", "127.0.0.1:0")
-	checkError(err)
+	var c Client
+	c.alive = true
+	c.sendingMessageQueue = make(chan string)
+	c.receiveMessages = make(chan string)
 
-	Conn, err := net.DialUDP("udp", LocalAddr, ServerAddr)
-	checkError(err)
+	c.connection, err = net.DialUDP("udp", nil, serverAddr) //localAddr is automatically chosen
+	errorCheck(err, "main", true)
 
-	defer Conn.Close()
-	i := 0
+	defer c.connection.Close()
+
+	log.Printf("Starting UDP Client, connected to %s (localAddress %s)", c.connection.RemoteAddr(), c.connection.LocalAddr())
+
+	ticker := time.NewTicker(3 * time.Second)
+	defer ticker.Stop()
+
+	//fire it up!
+	go c.receiveMessage()
+	go c.processMessage()
+
+	go c.sendMessage()
+
 	for {
-		msg := "Hellow server, send messege" +
-			"1 аааааааааааааааааааааааааааааааааааааааа " +
-			"2 аааааааааааааааааааааааааааааааааааааааа " +
-			"3 аааааааааааааааааааааааааааааааааааааааа " +
-			"4 аааааааааааааааааааааааааааааааааааааааа " +
-			"5 аааааааааааааааааааааааааааааааааааааааа " +
-			"6 аааааааааааааааааааааааааааааааааааааааа " +
-			"7 аааааааааааааааааааааааааааааааааааааааа " +
-			"8 аааааааааааааааааааааааааааааааааааааааа " +
-			"9 аааааааааааааааааааааааааааааааааааааааа " +
-			"10 аааааааааааааааааааааааааааааааааааааааа " +
-			"11 аааааааааааааааааааааааааааааааааааааааа" +
-			"12 аааааааааааааааааааааааааааааааааааааааа " +
-			"13 аааааааааааааааааааааааааааааааааааааааа " +
-			"14 аааааааааааааааааааааааааааааааааааааааа " +
-			"15 аааааааааааааааааааааааааааааааааааааааа " +
-			"16 аааааааааааааааааааааааааааааааааааааааа " +
-			"17 аааааааааааааааааааааааааааааааааааааааа " +
-			"18 аааааааааааааааааааааааааааааааааааааааа " +
-			"19 аааааааааааааааааааааааааааааааааааааааа " +
-			"20 аааааааааааааааааааааааааааааааааааааааа " +
-			"21 аааааааааааааааааааааааааааааааааааааааа " +
-			"22 аааааааааааааааааааааааааааааааааааааааа " +
-			"23 аааааааааааааааааааааааааааааааааааааааа " +
-			"24 аааааааааааааааааааааааааааааааааааааааа " +
-			"25 аааааааааааааааааааааааааааааааааааааааа " +
-			"26 аааааааааааааааааааааааааааааааааааааааа " +
-			"27 аааааааааааааааааааааааааааааааааааааааа " +
-			"28 аааааааааааааааааааааааааааааааааааааааа " +
-			"29 аааааааааааааааааааааааааааааааааааааааа " +
-			"30 аааааааааааааааааааааааааааааааааааааааа " +
-			"31 аааааааааааааааааааааааааааааааааааааааа " +
-			"#" + strconv.Itoa(i)
+		select {
+		case <-ticker.C:
 
-		i++
-		buf := 	[]byte(msg)
-		_,err := Conn.Write(buf)
-		if err != nil {
-			fmt.Println(msg, err)
+
+			/*
+			{
+				"command" : "n.user.register"
+				"payload" : {
+					"id" : "1",
+					"login" : "Ivan1998",
+					"password" : "sweethomealabama"
+				}
+			}
+
+			{"command":"n.user.register","payload":{"id":"1","login":"Ivan1998","password":"sweethomealabama"}}
+
+			 */
+			//c.sendingMessageQueue <- "client says hello at " + time.Now().Format("15:04:05")
+			messege := string(`{"command":"n.user.register","payload":{"id":"1","login":"Ivan1998","password":"sweethomealabama"}}`)
+			c.sendingMessageQueue <- messege
 		}
-		time.Sleep(time.Second * 1)
 	}
+
 }
