@@ -13,3 +13,4 @@ EnumeratorSelector 1.0 EnumeratorSelector.qml
 FormButton 1.0 FormButton.qml
 ContactDelegate 1.0 ContactDelegate.qml
 ContactsEditor 1.0 ContactsEditor.qml
+LabelAndText 1.0 LabelAndText.qml

@@ -3,7 +3,7 @@ import CHAT 1.0
 import assets 1.0
 
 Item {
-    property StringDecorator stringDecorator
+    property StringDecorator stringDecorator //в либах, из си
 
     height: width > textLabel.width + textValue.width ? Style.heightDataControls : Style.heightDataControls * 2
 

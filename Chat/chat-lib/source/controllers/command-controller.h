@@ -23,6 +23,8 @@ class CHATLIBSHARED_EXPORT CommandController : public ICommandController
     Q_PROPERTY(QQmlListProperty<chat::framework::Command> ui_chatViewContextCommands READ ui_chatViewContextCommands CONSTANT)
     Q_PROPERTY(QQmlListProperty<chat::framework::Command> ui_exitViewContextCommands READ ui_exitViewContextCommands CONSTANT)
 
+    //Q_PROPERTY(QQmlListProperty<chat::framework::Command> ui_chatViewBar READ ui_chatViewBar CONSTANT)
+
 public:
     explicit CommandController(QObject* _parent = nullptr, INavigationController* _navigationController = nullptr);
     ~CommandController();

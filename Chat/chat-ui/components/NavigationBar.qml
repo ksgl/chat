@@ -16,29 +16,43 @@ Item {
         Column {
             width: parent.width
             NavigationButton {
-                iconCharacter: "\uf0c9"
+                iconCharacter: ""
                 description: ""
-                hoverColour: "#993333"
+                image: "../images/lines.png";
+                hoverColour: "#b4b4d9"
                 onNavigationButtonClicked: isCollapsed = !isCollapsed
             }
             NavigationButton {
-                iconCharacter: "\uf015"
+                iconCharacter: ""
                 description: "Chats"
-                hoverColour: "#dc8a00"
+                image: "../images/message.png";
+                hoverColour: "#b4b4d9"
                 onNavigationButtonClicked: masterController.ui_navigationController.goChatListView();
             }
             NavigationButton {
-                iconCharacter: "\uf234"
+                iconCharacter: ""
                 description: "Friends"
-                hoverColour: "#dccd00"
+                image: "../images/friends.png";
+                hoverColour: "#b4b4d9"
                 onNavigationButtonClicked: masterController.ui_navigationController.goFriendListView();
             }
+
             NavigationButton {
-                iconCharacter: "\uf002"
+                iconCharacter: ""
+                description: "Settings"
+                image: "../images/settings.png";
+                hoverColour: "#b4b4d9"
+                onNavigationButtonClicked: masterController.ui_navigationController.goChatView(); //change
+            }
+
+            NavigationButton {
+                iconCharacter: ""
                 description: "Exit"
-                hoverColour: "#8aef63"
+                image: "../images/exit.png";
+                hoverColour: "#b4b4d9"
                 onNavigationButtonClicked: masterController.ui_navigationController.goExitView();
             }
+
 
         }
     }

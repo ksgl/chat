@@ -20,7 +20,9 @@ class CHATLIBSHARED_EXPORT ICommandController : public QObject
     Q_PROPERTY(QQmlListProperty<chat::framework::Command> ui_friendListViewContextCommands READ ui_friendListViewContextCommands CONSTANT)
     Q_PROPERTY(QQmlListProperty<chat::framework::Command> ui_addFriendViewContextCommands READ ui_addFriendViewContextCommands CONSTANT)
     Q_PROPERTY(QQmlListProperty<chat::framework::Command> ui_chatViewContextCommands READ ui_chatViewContextCommands CONSTANT)
-    Q_PROPERTY(QQmlListProperty<chat::framework::Command> ui_exitViewContextCommands READ ui_exitViewContextCommands CONSTANT)
+
+    //Q_PROPERTY(QQmlListProperty<chat::framework::Command> ui_chatViewBar READ ui_chatViewBar CONSTANT)
+
     
 public: 
     ICommandController(QObject* parent = nullptr) : QObject(parent){}

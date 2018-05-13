@@ -10,8 +10,20 @@ Window {
     height: Style.heightWindow
     title: qsTr("Chat")
 
+    NavigationBar {
+         id: navigationBar
+         visible: false
+     }
+   /* Rectangle {
+        id:chatAndSearchBar
+        x: navigationBar.width
+        width: 100
+        height: parent.height
+        color: red
+        visible: true
+    }*/
    Connections {
-        target: masterController.ui_navigationController
+        target: masterController.ui_navigationController //в либах
         onGoChatListView: {
             navigationBar.visible = true;
             contentFrame.replace("qrc:/views/ChatListView.qml");
@@ -28,11 +40,6 @@ Window {
 
     }
 
-   NavigationBar {
-        id: navigationBar
-        visible: false
-    }
-
    StackView {
         id: contentFrame
         clip: true
@@ -43,9 +50,8 @@ Window {
             left: navigationBar.right
         }
 
-        initialItem: Qt.resolvedUrl("qrc:/views/SplashView.qml")
+        initialItem: Qt.resolvedUrl("qrc:/views/LoginView.qml") //загрузка splashview
     }
 
     Component.onCompleted: contentFrame.replace("qrc:/views/LoginView.qml");
-
 }

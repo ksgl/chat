@@ -3,7 +3,6 @@ import assets 1.0
 
 Column {
     id: columnWithRectangle
-
     Rectangle {
         id: rectangle
         anchors.fill: parent

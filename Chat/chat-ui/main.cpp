@@ -1,7 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QtQml>
 
 #include <controllers/master-controller.h>
 #include <controllers/navigation-controller.h>
@@ -10,12 +9,12 @@
 
 int main(int argc, char *argv[])
 {
-    //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
-    
+
     qmlRegisterType<chat::controllers::MasterController>("CHAT", 1, 0, "MasterController");
-    
+
     qmlRegisterUncreatableType<chat::controllers::INavigationController>("CHAT", 1, 0, "INavigationController", "Interface");
     qmlRegisterUncreatableType<chat::controllers::ICommandController>("CHAT", 1, 0, "ICommandController", "Interface");
 
@@ -23,12 +22,12 @@ int main(int argc, char *argv[])
 
     chat::framework::ObjectFactory objectFactory;
     chat::controllers::MasterController masterController(nullptr, &objectFactory);
-    
+
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:/");
     engine.rootContext()->setContextProperty("masterController", &masterController);
     engine.load(QUrl(QStringLiteral("qrc:/views/MainView.qml")));
-    
+
     if (engine.rootObjects().isEmpty())
         return -1;
 

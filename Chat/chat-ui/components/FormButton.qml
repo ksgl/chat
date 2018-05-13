@@ -11,20 +11,21 @@ Item {
     Rectangle {
         id: background
         anchors.fill: parent
-        color: Style.colourFormButtonBackground
+        color: Style.colorFormButtonBackground
         radius: Style.sizeFormButtonRadius
+        border.color: Style.colorFormButtonBorder
         Text {
             id: textIcon
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
-                margins: Style.heightFormButton / 4
+                //margins: Style.heightFormButton / 4
             }
             font {
                 family: Style.fontAwesome
                 pixelSize: Style.pixelSizeFormButtonIcon
             }
-            color: Style.colourFormButtonFont
+            color: Style.colorFormButtonFont
             text: "\uf11a"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -38,7 +39,7 @@ Item {
                 right: parent.right
             }
             font.pixelSize: Style.pixelSizeFormButtonText
-            color: Style.colourFormButtonFont
+            color: Style.colorFormButtonFont
             text: "SET ME!!"
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
@@ -56,7 +57,8 @@ Item {
                 name: "hover"
                 PropertyChanges {
                     target: background
-                    color: Qt.darker(Style.colourFormButtonBackground)
+                    //color: Qt.darker(Style.colorFormButtonBackground)
+                    color: "#b4b4d9"
                 }
             }
         ]
