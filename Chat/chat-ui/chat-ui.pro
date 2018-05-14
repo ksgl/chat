@@ -1,3 +1,6 @@
+include(../qmake-target-platform.pri)
+include(../qmake-destination-path.pri)
+
 TEMPLATE = app
 
 QT += qml quick
@@ -5,6 +8,12 @@ CONFIG += c++14
 
 INCLUDEPATH +=  source \
     ../chat-lib/source
+
+DESTDIR = $$PWD/../binaries/$$DESTINATION_PATH
+OBJECTS_DIR = $$PWD/build/$$DESTINATION_PATH/.obj
+MOC_DIR = $$PWD/build/$$DESTINATION_PATH/.moc
+RCC_DIR = $$PWD/build/$$DESTINATION_PATH/.qrc
+UI_DIR = $$PWD/build/$$DESTINATION_PATH/.ui
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -19,7 +28,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += source/main.cpp
 
-LIBS += -L$$PWD/../../build-Chat-Desktop_Qt_5_10_1_GCC_64bit-Debug/chat-lib -lchat-lib
+LIBS += -L$$PWD/../binaries/$$DESTINATION_PATH -lchat-lib
 
 RESOURCES += qml.qrc \
     views.qrc \

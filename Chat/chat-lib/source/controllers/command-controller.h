@@ -58,6 +58,8 @@ public slots:
     void onDeclineFriendRequest();
     void onExitExecuted();
 
+
+
 private:
     class Implementation;
     QScopedPointer<Implementation> implementation;

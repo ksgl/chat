@@ -4,6 +4,10 @@
 #
 #-------------------------------------------------
 
+include(../qmake-target-platform.pri)
+include(../qmake-destination-path.pri)
+
+
 QT       -= gui
 
 TARGET = chat-lib
@@ -12,6 +16,12 @@ CONFIG += c++14
 
 DEFINES += CHATLIB_LIBRARY
 INCLUDEPATH += source
+
+DESTDIR = $$PWD/../binaries/$$DESTINATION_PATH
+OBJECTS_DIR = $$PWD/build/$$DESTINATION_PATH/.obj
+MOC_DIR = $$PWD/build/$$DESTINATION_PATH/.moc
+RCC_DIR = $$PWD/build/$$DESTINATION_PATH/.qrc
+UI_DIR = $$PWD/build/$$DESTINATION_PATH/.ui
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -28,7 +38,17 @@ SOURCES += \
     source/controllers/master-controller.cpp \
     source/framework/object-factory.cpp \
     source/framework/command.cpp \
-    source/controllers/command-controller.cpp
+    source/controllers/command-controller.cpp \
+    source/data/entity.cpp \
+    source/data/data-decorator.cpp \
+    source/data/string-decorator.cpp \
+    source/data/int-decorator.cpp \
+    source/data/datetime-decorator.cpp \
+    source/data/enumerator-decorator.cpp \
+    source/models/user-model.cpp \
+    source/models/friend.cpp \
+    source/models/message.cpp \
+    source/models/chat-model.cpp
 
 HEADERS += \
     source/chat-lib_global.h \
@@ -40,7 +60,20 @@ HEADERS += \
     source/controllers/i-navigation-controller.h \
     source/controllers/i-command-controller.h \
     source/framework/command.h \
-    source/controllers/command-controller.h
+    source/controllers/command-controller.h \
+    source/data/entity.h \
+    source/data/entity-collection.h \
+    source/data/data-decorator.h \
+    source/data/string-decorator.h \
+    source/data/int-decorator.h \
+    source/data/datetime-decorator.h \
+    source/data/enumerator-decorator.h \
+    source/models/user-model.h \
+    source/models/friend.h \
+    source/models/message.h \
+    source/models/chat-model.h \
+    source/controllers/i-database-controller.h \
+    source/controllers/i-user-controller.h
 
 unix {
     target.path = /usr/lib

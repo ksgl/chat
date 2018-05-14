@@ -2,4 +2,5 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     chat-lib \
-    chat-ui
+    chat-ui \
+    chat-tests

@@ -11,9 +11,10 @@
         <file alias="SearchResultDelegate.qml">components/SearchResultDelegate.qml</file>
         <file alias="RssItemDelegate.qml">components/RssItemDelegate.qml</file>
         <file alias="EnumeratorSelector.qml">components/EnumeratorSelector.qml</file>
-	<file alias="EnumeratorSelectorView.qml">components/EnumeratorSelectorView.qml</file>
+        <file alias="EnumeratorSelectorView.qml">components/EnumeratorSelectorView.qml</file>
         <file alias="FormButton.qml">components/FormButton.qml</file>
         <file alias="ContactDelegate.qml">components/ContactDelegate.qml</file>
         <file alias="ContactsEditor.qml">components/ContactsEditor.qml</file>
     </qresource>
+    <qresource prefix="/"/>
 </RCC>

@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
 
     chat::framework::ObjectFactory objectFactory;
     chat::controllers::MasterController masterController(nullptr, &objectFactory);
+
+    //добавить таск менеджер, очередь
     
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:/");
