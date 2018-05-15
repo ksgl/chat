@@ -48,7 +48,8 @@ SOURCES += \
     source/models/user-model.cpp \
     source/models/friend.cpp \
     source/models/message.cpp \
-    source/models/chat-model.cpp
+    source/models/chat-model.cpp \
+    source/controllers/friend-controller.cpp
 
 HEADERS += \
     source/chat-lib_global.h \
@@ -73,7 +74,8 @@ HEADERS += \
     source/models/message.h \
     source/models/chat-model.h \
     source/controllers/i-database-controller.h \
-    source/controllers/i-user-controller.h
+    source/controllers/i-user-controller.h \
+    source/controllers/friend-controller.h
 
 unix {
     target.path = /usr/lib

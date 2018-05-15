@@ -50,6 +50,20 @@ void UserModelTests::constructor_givenParentAndJsonObject_setsParentAndPropertie
     verifyChats(testUserModel.chats->derivedEntities());
 }
 
+void UserModelTests::constructorFriend_givenParentAndOtherEntity_setsParentAnsProperties()
+{
+    UserModel testUserModel(this, QJsonDocument::fromJson(jsonByteArray).object());
+    Friend* friendExample = testUserModel.friends->derivedEntities().at(0);
+    Friend friendReference(&testUserModel, friendExample);
+
+    QCOMPARE(friendReference.reference->value(), QString("FR0001"));
+    QCOMPARE(friendReference.friendName->value(), QString("Frienderson"));
+    QCOMPARE(friendReference.friendIp->value(), QString("127.01.02.44"));
+    QCOMPARE(friendReference.lastVisit->value(), QDateTime(QDate(2017, 8, 20), QTime(13, 0)));
+    QCOMPARE(friendReference.status->value(), static_cast<int>(Friend::eStatus::Online));
+
+}
+
 void UserModelTests::toJson_withDefaultProperties_constructsJson()
 {
     UserModel testUserModel(this);

@@ -49,7 +49,8 @@ SOURCES += \
     source/data/string-decorator-tests.cpp \
     source/data/datetime-decorator-tests.cpp \
     source/data/enumerator-decorator-tests.cpp \
-    source/models/user-model-tests.cpp
+    source/models/user-model-tests.cpp \
+    source/controllers/friend-controller-tests.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -61,6 +62,7 @@ HEADERS += \
     source/data/string-decorator-tests.h \
     source/data/datetime-decorator-tests.h \
     source/data/enumerator-decorator-tests.h \
-    source/models/user-model-tests.h
+    source/models/user-model-tests.h \
+    source/controllers/friend-controller-tests.h
 
 LIBS += -L$$PWD/../binaries/$$DESTINATION_PATH -lchat-lib

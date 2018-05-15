@@ -31,4 +31,4 @@ xcuserdata/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-build-Chat*
+Chat/binaries

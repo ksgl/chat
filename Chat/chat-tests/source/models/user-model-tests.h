@@ -19,6 +19,7 @@ private slots:
 
     void constructor_givenParent_setsParentAndDefaultProperties();
     void constructor_givenParentAndJsonObject_setsParentAndProperties();
+    void constructorFriend_givenParentAndOtherEntity_setsParentAnsProperties();
     void toJson_withDefaultProperties_constructsJson();
     void toJson_withSetProperties_constructsJson();
     void update_givenJsonObject_updatesProperties();

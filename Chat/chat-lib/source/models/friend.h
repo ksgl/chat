@@ -31,6 +31,13 @@ public:
 public:
     explicit Friend(QObject* parent = nullptr);
     Friend(QObject *parent, const QJsonObject& json);
+    Friend(QObject *parent, const Friend* other);
+
+    Friend(QObject *parent, const QString& newReference,
+                            const QString& newFriendName,
+                            const QString& newFriendIp,
+                            Friend::eStatus newStatus,
+                            const QDateTime& newLastVisit);
 
     data::StringDecorator* reference{nullptr};
     data::EnumeratorDecorator* status{nullptr};
@@ -41,13 +48,10 @@ public:
     static std::map<int, QString> statusMapper;
     
 signals:
-    void lastVisitChanged();
+
+    void friendAdded();
     void statusChanged();
-    
-public slots:
-    void changeLastVisit(QDateTime newLastVisit);
-    void changeStatus(eStatus newStatus);
-    void changeStatus(QString newStatus);
+    void lastVisitChanged();
 };
 
 }

@@ -23,33 +23,43 @@ Friend::Friend(QObject *parent)
     setPrimaryKey(reference);
 }
 
+Friend::Friend(QObject *parent, const Friend* other)
+    : Friend(parent)
+{
+    QString newReference = other->reference->value();
+    QString newFriendName = other->friendName->value();
+    QString newFriendIp = other->friendIp->value();
+    QDateTime newLasrVisit = other->lastVisit->value();
+
+    this->reference->setValue(newReference);
+    this->status->setValue(other->status->value());
+    this->friendName->setValue(newFriendName);
+    this->friendIp->setValue(newFriendIp);
+    this->lastVisit->setValue(newLasrVisit);
+}
+
+Friend::Friend(QObject *parent,
+               const QString& newReference,
+               const QString& newFriendName,
+               const QString& newFriendIp,
+               Friend::eStatus newStatus,
+               const QDateTime& newLastVisit)
+    : Friend(parent)
+{
+    if (newReference != nullptr)
+    {
+        this->reference->setValue(newReference);
+    }
+    this->status->setValue(newStatus);
+    this->friendName->setValue(newFriendName);
+    this->friendIp->setValue(newFriendIp);
+    this->lastVisit->setValue(newLastVisit);
+}
+
 Friend::Friend(QObject *parent, const QJsonObject &json)
     : Friend(parent)
 {
     update(json);
-}
-
-void Friend::changeLastVisit(QDateTime newLastVisit)
-{
-    this->lastVisit->setValue(newLastVisit);
-    emit lastVisitChanged();
-}
-
-void Friend::changeStatus(eStatus newStatus)
-{
-    this->status->setValue(newStatus);
-    emit statusChanged();
-}
-
-void Friend::changeStatus(QString newStatus)
-{
-    for (auto pair : statusMapper) {
-        if (pair.second == newStatus) {
-            this->status->setValue(pair.first);
-            emit statusChanged();
-            break;
-        }
-    }
 }
 
 }
