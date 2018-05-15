@@ -34,6 +34,7 @@ Message::Message(QObject *parent)
 
     messageData = static_cast<StringDecorator*>(addDataItem(new StringDecorator(this, "messageData", "Message Data")));
 
+    reference->setValue(this->id());
     setPrimaryKey(reference);
 }
 
@@ -41,6 +42,54 @@ Message::Message(QObject *parent, const QJsonObject &json)
     : Message(parent)
 {
     update(json);
+}
+
+Message::Message(QObject *parent, const Message* other)
+    : Message(parent)
+{
+    QString newReference = other->reference->value();
+    QString newSender = other->sender->value();
+    QString newReceiver = other->receiver->value();
+    QDateTime newSendAt = other->sendAt->value();
+    QDateTime newReceivedAt = other->receivedAt->value();
+    Message::eMessageType type = static_cast<Message::eMessageType>(other->messageType->value());
+    Message::eMessageStatus status = static_cast<Message::eMessageStatus>(other->messageStatus->value());
+    QString data = other->messageData->value();
+
+    if (!newReference.isEmpty())
+    {
+        this->reference->setValue(newReference);
+    }
+    this->sender->setValue(newSender);
+    this->receiver->setValue(newReceiver);
+    this->sendAt->setValue(newSendAt);
+    this->receivedAt->setValue(newReceivedAt);
+    this->messageType->setValue(type);
+    this->messageStatus->setValue(status);
+    this->messageData->setValue(data);
+}
+
+Message::Message(QObject *parent, const QString& newReference,
+                                  const QString& newSender,
+                                  const QString& newReceiver,
+                                  const QDateTime& newSendAt,
+                                  const QDateTime& newReceivedAt,
+                                  Message::eMessageType newMessageType,
+                                  Message::eMessageStatus newMessageStatus,
+                                  const QString& newMessageData)
+    : Message(parent)
+{
+    if (!newReference.isEmpty())
+    {
+        this->reference->setValue(newReference);
+    }
+    this->sender->setValue(newSender);
+    this->receiver->setValue(newReceiver);
+    this->sendAt->setValue(newSendAt);
+    this->receivedAt->setValue(newReceivedAt);
+    this->messageType->setValue(newMessageType);
+    this->messageStatus->setValue(newMessageStatus);
+    this->messageData->setValue(newMessageData);
 }
 
 void Message::changeMessageStatus(eMessageStatus newStatus)

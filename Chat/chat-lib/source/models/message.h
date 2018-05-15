@@ -40,6 +40,16 @@ public:
 public:
     explicit Message(QObject *parent = nullptr);
     Message(QObject *parent, const QJsonObject& json);
+    Message(QObject *parent, const Message* other);
+
+    Message(QObject *parent, const QString& reference,
+                             const QString& sender,
+                             const QString& receiver,
+                             const QDateTime& sendAt,
+                             const QDateTime& receivedAt,
+                             Message::eMessageType messageType,
+                             Message::eMessageStatus messageStatus,
+                             const QString& messageData);
     
     data::StringDecorator* reference{nullptr};
 

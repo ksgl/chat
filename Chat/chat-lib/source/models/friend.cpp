@@ -20,6 +20,7 @@ Friend::Friend(QObject *parent)
     friendIp = static_cast<StringDecorator*>(addDataItem(new StringDecorator(this, "friendIp", "Friend Ip")));
     lastVisit = static_cast<DateTimeDecorator*>(addDataItem(new DateTimeDecorator(this, "lastVisit", "Last Visit")));
 
+    reference->setValue(this->id());
     setPrimaryKey(reference);
 }
 
@@ -31,7 +32,10 @@ Friend::Friend(QObject *parent, const Friend* other)
     QString newFriendIp = other->friendIp->value();
     QDateTime newLasrVisit = other->lastVisit->value();
 
-    this->reference->setValue(newReference);
+    if (!newReference.isEmpty())
+    {
+        this->reference->setValue(newReference);
+    }
     this->status->setValue(other->status->value());
     this->friendName->setValue(newFriendName);
     this->friendIp->setValue(newFriendIp);
@@ -46,7 +50,7 @@ Friend::Friend(QObject *parent,
                const QDateTime& newLastVisit)
     : Friend(parent)
 {
-    if (newReference != nullptr)
+    if (!newReference.isEmpty())
     {
         this->reference->setValue(newReference);
     }

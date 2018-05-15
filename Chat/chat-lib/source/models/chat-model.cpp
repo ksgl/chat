@@ -12,6 +12,7 @@ ChatModel::ChatModel(QObject* parent)
     friendInChatReference = static_cast<StringDecorator*>(addDataItem(new StringDecorator(this, "friendInChatReference", "Friend In Chat Reference")));
     messages = static_cast<EntityCollection<Message>*>(addChildCollection(new EntityCollection<Message>(this, "messages")));
 
+    reference->setValue(this->id());
     setPrimaryKey(reference);
 }
 

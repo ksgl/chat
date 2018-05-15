@@ -306,7 +306,7 @@ void FriendControllerTests::MultitaskTesting()
 
 }
 
-void FriendControllerTests::validateFriend1(Friend *testFriend1)
+void FriendControllerTests::validateFriend1(const Friend *testFriend1)
 {
     QCOMPARE(testFriend1->reference->value(), QString("FR0001"));
     QCOMPARE(testFriend1->friendName->value(), QString("Frienderson"));
@@ -315,7 +315,7 @@ void FriendControllerTests::validateFriend1(Friend *testFriend1)
     QCOMPARE(testFriend1->status->value(), static_cast<int>(Friend::eStatus::Online));
 }
 
-void FriendControllerTests::validateFriend2(Friend *testFriend2)
+void FriendControllerTests::validateFriend2(const Friend *testFriend2)
 {
     QCOMPARE(testFriend2->reference->value(), QString("FR0002"));
     QCOMPARE(testFriend2->friendName->value(), QString("Friend Friend"));
@@ -324,7 +324,7 @@ void FriendControllerTests::validateFriend2(Friend *testFriend2)
     QCOMPARE(testFriend2->status->value(), static_cast<int>(Friend::eStatus::Offline));
 }
 
-void FriendControllerTests::validateFriend3(Friend* testFriend3)
+void FriendControllerTests::validateFriend3(const Friend* testFriend3)
 {
     QCOMPARE(testFriend3->reference->value(), QString("FR0003"));
     QCOMPARE(testFriend3->friendName->value(), QString("FromFriend"));

@@ -41,7 +41,6 @@ INCLUDEPATH += source \
     ../chat-lib/source
 
 SOURCES += \
-        tst_chattest.cpp \ 
     source/test-suite.cpp \
     source/main.cpp \
     source/controllers/master-controller-tests.cpp \
@@ -50,7 +49,8 @@ SOURCES += \
     source/data/datetime-decorator-tests.cpp \
     source/data/enumerator-decorator-tests.cpp \
     source/models/user-model-tests.cpp \
-    source/controllers/friend-controller-tests.cpp
+    source/controllers/friend-controller-tests.cpp \
+    source/controllers/message-controller-tests.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -63,6 +63,7 @@ HEADERS += \
     source/data/datetime-decorator-tests.h \
     source/data/enumerator-decorator-tests.h \
     source/models/user-model-tests.h \
-    source/controllers/friend-controller-tests.h
+    source/controllers/friend-controller-tests.h \
+    source/controllers/message-controller-tests.h
 
 LIBS += -L$$PWD/../binaries/$$DESTINATION_PATH -lchat-lib

@@ -1,9 +1,9 @@
-#ifndef FRIENDCONTROLLERTESTS_H
-#define FRIENDCONTROLLERTESTS_H
+#ifndef MESSAGECONTROLLERTESTS_H
+#define MESSAGECONTROLLERTESTS_H
 
 #include <QTest>
 
-#include <controllers/friend-controller.h>
+#include <controllers/message-controller.h>
 #include <models/user-model.h>
 
 #include <test-suite.h>
@@ -11,12 +11,12 @@
 namespace chat {
 namespace controllers {
 
-class FriendControllerTests : public TestSuite
+class MessageControllerTests : public TestSuite
 {
     Q_OBJECT
 
 public:
-   FriendControllerTests();
+   MessageControllerTests();
 
 public slots:
 
@@ -31,39 +31,46 @@ public slots:
 
 private slots:
 
-   void getFriend_setFriendReference_returnsCorrectFriend();
-   void getFriend_setInvalidFriendReference_returnsNullptr();
-   void getFriendByName_setFriendName_retrurnsCorrectFriend();
-   void getFriendByName_setInvalidName_returnsNullptr();
-   void getFriendStatus_setFriendReference_returnsCorrectStatus();
-   void getFriendStatus_setInvalidFriendReference_returnsUnknownStatus();
-   void getFriendList_returnsCorrectFriendList();
-   void getFriendListByStatus_setCorrectStatus_returnsCorrectList();
-   void getFriendListByStatus_setInvalidStatus_returnsNullSizeList();
+   void getChat_setFriendReference_returnsCorrectChat();
+   void getChat_setInvalidFriendReference_returnsNullptr();
+   void getMessage_setChatAndMessageReference_returnsCorrectMessage();
+   void getMessage_setFriendReference_returnsCorrectMessage();
+   void getMessage_setMessageReference_returnsCorrectMessage();
+   void getMessage_setInvalidMessageReference_returnsNullptr();
+   void getMessage_setInvalidChat_returnsNullptr();
+   void getMessage_setInvalidFriendReference_returnsNullptr();
 
-   void changeFriendStatus_setFriendReferenceAndValidStatus_setsNewStatus();
-   void changeFriendStatus_setFriendReferenceAndInvalidStatus_leavesPreviousValue();
-   void changeFriendStatus_setInvalidFriendReference_doesNothing();
-   void changeFriendStatus_setFriendAndValidStatus_setsNewStatus();
-   void changeFriendStatus_setInvalidFriend_doesNothing();
-   void changeLastVisit_setFriendReferenceAndValidDateTime_setsNewDateTime();
-   void changeLastVisit_setInvalidFriendReference_doesNothing();
-   void changeLastVisit_setFriendAndValidDateTime_setsNewDateTime();
-   void changeLastVisit_setInvalidFriend_doesNothing();
+   void getMessageStatus_setMessageReference_returnsCorrectStatus();
 
-   void addFriend_setValidFriend_addsNewFriend();
-   void addFriend_setNullptr_doesNothing();
-   void addFriend_setNameIpLastVisitStatus_addsNewFriend();
+   void getMessageList_setChat_returnsCorrectList();
+   //void getMessageList_setInvalidChat_returnsNullptr();
+   void getMessageListByFriend_setFriendReference_returnsCorrectList();
+   //void getMessageListByFriend_setInvalidFriendReference_returnsNullptr();
+   void getMessageListByStatus_setChatAndStatus_returnsCorrectList();
+   void getMessageListByStatus_setInvalidChat_returnsNullptr();
+   void getMessageListByStatus_setMessages_returnsCorrectList();
+
+   void changeMessageStatus_setMessageAndStatus_setsNewStatus();
+   void changeMessageStatus_setMessageReferenceAndStatus_setsNewStatus();
+   void changeMessageStatus_setInvalidMessageReference_doesNothing();
+
+   void addMessage_setChatAndMessage_addsMessage();
+   void addMessage_setChatAndParameters_addsMessage();
+   void addMessage_setFriendReferenceAndMessage_addsMessage();
+   void addMessage_setFriendReferenceAndParameters_addsMessage();
+   void addMessage_setInvalidChat_doesNothind();
+   void addMessage_setInvalidFriendReference_doesNothing();
 
    void MultitaskTesting();
 
 private:
 
-   void validateFriend1(const models::Friend* testFriend1);
-   void validateFriend2(const models::Friend* testFriend2);
-   void validateFriend3(const models::Friend* testFriend3);
+   void validateChat1(const models::ChatModel* testChat1);
+   void validateMessage1(models::Message* testMessage1);
+   void validateMessage2(models::Message* testMessage2);
+   void validateMessage3(models::Message* testMessage3);
 
-   FriendController* friendController{nullptr};
+   MessageController* messageController{nullptr};
    models::UserModel* testUser{nullptr};
 
    QByteArray jsonByteArray = R"({
@@ -145,4 +152,4 @@ private:
 }
 
 
-#endif // FRIENDCONTROLLERTESTS_H
+#endif // MESSAGECONTROLLERTESTS_H
