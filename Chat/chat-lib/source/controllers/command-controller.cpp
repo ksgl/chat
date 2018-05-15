@@ -91,7 +91,6 @@ public:
         Command* exitCommand = new Command(commandController, QChar(0xf0c7), "Exit");
         QObject::connect(exitCommand, &Command::executed, commandController, &CommandController::onExitExecuted);
         exitViewContextCommands.append(exitCommand);
-
     }
 
     CommandController* commandController{nullptr};

@@ -56,6 +56,19 @@ Item {
             x: parent.width - 100
             y: parent.height - 70
         }
+
+        //StackView.view.push(...) - better way
+        FormButton {          //temporary
+            id: backButton
+            description: qsTr("Back")
+            iconCharacter: ""
+            width: 70
+            height: 25
+            x: 30
+            y: 100
+            onFormButtonClicked: contentFrame.replace("qrc:/views/ChatListView.qml")
+
+        }
     }
 
     CommandBar {

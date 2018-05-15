@@ -1,5 +1,6 @@
 import QtQuick 2.9
 import components 1.0
+import CHAT 1.0
 import assets 1.0
 
 import QtQuick.Controls 1.4
@@ -22,14 +23,14 @@ Item {
                 leftMargin: 30
                 topMargin: 100
             }
-            text: "Chat List View"
+            text: "My Chats"
             color: Style.colourDashboardFont
             font.pixelSize: Style.pixelSizeDashboard
         }
-
-        ListView {
+       ListView {
             id: listView
             anchors.fill: parent
+
             topMargin: welcomeText.anchors.topMargin + 60
             leftMargin: welcomeText.anchors.leftMargin
             bottomMargin: 20
@@ -39,14 +40,14 @@ Item {
             model: ["Albert Einstein", "Ernest Hemingway", "Hans Gude"]
 
             delegate: ItemDelegate {
-                Text {
-                    text: modelData;
-                    color: "black";
-                    font.pixelSize: 16;
-                }
                 width: listView.width - listView.leftMargin - listView.rightMargin
-                height: avatar.implicitHeight
-                leftPadding: avatar.implicitWidth + 32
+                Text {
+                    text: modelData
+                    //color: "black"
+                    font.pixelSize: 16
+                    height: avatar.implicitHeight
+                    leftPadding: avatar.implicitWidth + 32
+                }
                 onClicked: {
                     console.log("clicked:", modelData)
                     contentFrame.replace("qrc:/views/ChatView.qml");
@@ -57,9 +58,14 @@ Item {
                     //source: "qrc:/" + modelData.replace(" ", "_") + ".png"
                 }
              }
+
+            /*model: ChatModel {}
+            delegate: ItemDelegate {
+                text:model.display
+            }*/
+
             ScrollIndicator.vertical: ScrollIndicator { }
          }
-
     }
 
     CommandBar {

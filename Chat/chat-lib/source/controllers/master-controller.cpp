@@ -21,6 +21,8 @@ public:
     INavigationController* navigationController{nullptr};
     ICommandController* commandController{nullptr};
 
+    QString welcomeMessage = "Welcome to the Chat!";
+
 };
 
 MasterController::MasterController(QObject *parent, IObjectFactory* objectFactory)
@@ -39,6 +41,11 @@ INavigationController* MasterController::navigationController()
 ICommandController* MasterController::commandController()
 {
     return implementation->commandController;
+}
+
+const QString& MasterController::welcomeMessage() const
+{
+    return implementation->welcomeMessage;
 }
 
 }

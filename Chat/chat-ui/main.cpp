@@ -8,12 +8,11 @@
 #include <data/string-decorator.h>
 #include <framework/command.h>
 #include <framework/object-factory.h>
+#include <models/chat-model.h>
 
 int main(int argc, char *argv[])
 {
-#if defined(Q_OS_WIN)
-     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
 
@@ -24,9 +23,12 @@ int main(int argc, char *argv[])
 
     qmlRegisterType<chat::framework::Command>("CHAT", 1, 0, "Command");
     qmlRegisterType<chat::data::StringDecorator>("CHAT", 1, 0, "StringDecorator");
+    qmlRegisterType<chat::models::ChatModel>("CHAT", 1, 0, "ChatModel");
 
     chat::framework::ObjectFactory objectFactory;
     chat::controllers::MasterController masterController(nullptr, &objectFactory);
+
+    //добавить таск менеджер, очередь
 
     QQmlApplicationEngine engine;
     engine.addImportPath("qrc:/");

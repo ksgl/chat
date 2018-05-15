@@ -18,6 +18,7 @@ class MasterController : public QObject
     Q_OBJECT
     Q_PROPERTY(chat::controllers::INavigationController* ui_navigationController READ navigationController CONSTANT)
     Q_PROPERTY(chat::controllers::ICommandController* ui_commandController READ commandController CONSTANT)
+    Q_PROPERTY( QString ui_welcomeMessage READ welcomeMessage CONSTANT )
 
 public:
     explicit MasterController(QObject *parent = nullptr, framework::IObjectFactory* objectFactory = nullptr);
@@ -25,6 +26,8 @@ public:
 
     INavigationController* navigationController();
     ICommandController* commandController();
+
+    const QString& welcomeMessage() const;
 
 signals:
 

@@ -17,6 +17,7 @@
         <file alias="ContactsEditor.qml">components/ContactsEditor.qml</file>
         <file alias="LabelAndText.qml">components/LabelAndText.qml</file>
     </qresource>
+
     <qresource prefix="/">
         <file>images/loupe.png</file>
         <file>images/message.png</file>
@@ -29,4 +30,5 @@
         <file>images/Hans_Gude.png</file>
     </qresource>
     <qresource prefix="/image"/>
+
 </RCC>

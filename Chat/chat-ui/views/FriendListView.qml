@@ -22,7 +22,7 @@ Item {
                 leftMargin: 30
                 topMargin: 100
             }
-            text: "Friend List View"
+            text: "Friends List View"
             color: Style.colourDashboardFont
             font.pixelSize: Style.pixelSizeDashboard
         }
@@ -39,19 +39,22 @@ Item {
             model: ["Albert Einstein", "Ernest Hemingway", "Hans Gude"]
 
             delegate: ItemDelegate {
-                Text {
-                    text: modelData;
-                    color: "black";
-                    font.pixelSize: 16;
-                }
                 width: listView.width - listView.leftMargin - listView.rightMargin
-                height: avatar.implicitHeight
-                leftPadding: avatar.implicitWidth + 32
-                /*Image {
+                Text {
+                    text: modelData
+                    //color: "black"
+                    font.pixelSize: 16
+                    height: avatar.implicitHeight
+                    leftPadding: avatar.implicitWidth + 32
+                }
+                onClicked: {
+                    console.log("clicked:", modelData)
+                    contentFrame.replace("qrc:/views/ChatView.qml");
+                }
+                Image {
                     id: avatar
-                    source: "qrc:/" + modelData.replace(" ", "_") + ".png"
-                    //source:"images/loupe.png"
-                }*/
+                    source: "../images/" + modelData.replace(" ", "_") + ".png"
+                }
              }
             ScrollIndicator.vertical: ScrollIndicator { }
          }
