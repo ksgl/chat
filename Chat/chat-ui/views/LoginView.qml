@@ -58,7 +58,6 @@ Item {
             }
         }
 
-
         Text {
             x: parent.width / 3
             y: 250

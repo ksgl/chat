@@ -28,7 +28,9 @@ SOURCES += \
     source/controllers/master-controller.cpp \
     source/framework/object-factory.cpp \
     source/framework/command.cpp \
-    source/controllers/command-controller.cpp
+    source/controllers/command-controller.cpp \
+    source/data/data-decorator.cpp \
+    source/data/string-decorator.cpp
 
 HEADERS += \
     source/chat-lib_global.h \
@@ -40,7 +42,9 @@ HEADERS += \
     source/controllers/i-navigation-controller.h \
     source/controllers/i-command-controller.h \
     source/framework/command.h \
-    source/controllers/command-controller.h
+    source/controllers/command-controller.h \
+    source/data/data-decorator.h \
+    source/data/string-decorator.h
 
 unix {
     target.path = /usr/lib

@@ -5,11 +5,15 @@
 #include <controllers/master-controller.h>
 #include <controllers/navigation-controller.h>
 #include <controllers/i-command-controller.h>
+#include <data/string-decorator.h>
+#include <framework/command.h>
 #include <framework/object-factory.h>
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#if defined(Q_OS_WIN)
+     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
 
     QGuiApplication app(argc, argv);
 
@@ -19,6 +23,7 @@ int main(int argc, char *argv[])
     qmlRegisterUncreatableType<chat::controllers::ICommandController>("CHAT", 1, 0, "ICommandController", "Interface");
 
     qmlRegisterType<chat::framework::Command>("CHAT", 1, 0, "Command");
+    qmlRegisterType<chat::data::StringDecorator>("CHAT", 1, 0, "StringDecorator");
 
     chat::framework::ObjectFactory objectFactory;
     chat::controllers::MasterController masterController(nullptr, &objectFactory);
