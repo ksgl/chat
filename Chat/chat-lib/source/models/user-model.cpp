@@ -34,20 +34,6 @@ QQmlListProperty<ChatModel> UserModel::ui_chats()
     return QQmlListProperty<ChatModel>(this, chats->derivedEntities());
 }
 
-void UserModel::addFriend()
-{
-    friends->addEntity(new Friend(this));
-    emit friendsChanged();
-}
-
-void UserModel::addChat(Friend* friendInChat)
-{
-    ChatModel* newChat = new ChatModel(this);
-    newChat->setFriendReference(friendInChat);
-    chats->addEntity(newChat);
-
-    emit chatsChanged();
-}
 
 
 }

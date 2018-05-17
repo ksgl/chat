@@ -31,12 +31,9 @@ public:
     QQmlListProperty<chat::models::Message> ui_messages();
     
 signals:
+
     void messagesChanged();
 
-public slots:
-    void addMessage();
-    void setFriendReference(Friend* _friendInChat);
-    void setFriendReference(QString& reference);
 };
 
 

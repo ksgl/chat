@@ -35,6 +35,7 @@ public:
     virtual QQmlListProperty<framework::Command> ui_chatViewContextCommands() = 0;
 
 public slots:
+
     virtual void onLoginExecuted() = 0;
     virtual void onLoginViewExecuted() = 0;
     virtual void onRegisterViewExecuted() = 0;

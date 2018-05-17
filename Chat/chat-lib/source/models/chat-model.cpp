@@ -27,21 +27,5 @@ QQmlListProperty<Message> ChatModel::ui_messages()
     return QQmlListProperty<Message>(this, messages->derivedEntities());
 }
 
-void ChatModel::setFriendReference(Friend* _friendInChat)
-{
-    friendInChatReference->setValue(_friendInChat->reference->value());
-}
-
-void ChatModel::setFriendReference(QString& reference)
-{
-    friendInChatReference->setValue(reference);
-}
-
-void ChatModel::addMessage()
-{
-    messages->addEntity(new Message(this));
-    emit messagesChanged();
-}
-
 }
 }

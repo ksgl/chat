@@ -50,7 +50,10 @@ SOURCES += \
     source/models/message.cpp \
     source/models/chat-model.cpp \
     source/controllers/friend-controller.cpp \
-    source/controllers/message-controller.cpp
+    source/controllers/message-controller.cpp \
+    source/controllers/user-controller.cpp \
+    source/services/task-executor-callback-binder.cpp \
+    source/controllers/service-controller.cpp
 
 HEADERS += \
     source/chat-lib_global.h \
@@ -77,7 +80,12 @@ HEADERS += \
     source/controllers/i-database-controller.h \
     source/controllers/i-user-controller.h \
     source/controllers/friend-controller.h \
-    source/controllers/message-controller.h
+    source/controllers/message-controller.h \
+    source/controllers/user-controller.h \
+    source/services/task-executor-callback-binder.h \
+    source/framework/callback.h \
+    source/services/i-task-executor-callback-binder.h \
+    source/controllers/service-controller.h
 
 unix {
     target.path = /usr/lib

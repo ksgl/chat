@@ -50,21 +50,21 @@ namespace controllers { // Tests
 
 void MessageControllerTests::getChat_setFriendReference_returnsCorrectChat()
 {
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
     validateChat1(testChat);
 }
 
 void MessageControllerTests::getChat_setInvalidFriendReference_returnsNullptr()
 {
-    ChatModel* testChat = messageController->getChat("FR0000");
+    ChatModel* testChat = messageController->getChatByFriend("FR0000");
     QVERIFY(testChat == nullptr);
-    testChat = messageController->getChat(nullptr);
+    testChat = messageController->getChatByFriend(nullptr);
     QVERIFY(testChat == nullptr);
 }
 
 void MessageControllerTests::getMessage_setChatAndMessageReference_returnsCorrectMessage()
 {
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
     Message* message = messageController->getMessageByChat(testChat, "MS0001");
     validateMessage1(message);
 }
@@ -106,7 +106,7 @@ void MessageControllerTests::getMessageStatus_setMessageReference_returnsCorrect
 
 void MessageControllerTests::getMessageList_setChat_returnsCorrectList()
 {
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
     QList<Message*> messages = messageController->getMessageList(testChat);
 
     QCOMPARE(messages.size(), 2);
@@ -146,7 +146,7 @@ void MessageControllerTests::getMessageListByFriend_setInvalidFriendReference_re
 
 void MessageControllerTests::getMessageListByStatus_setChatAndStatus_returnsCorrectList()
 {
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
     QList<Message*>* messages = messageController->getMessageListByStatus(testChat, Message::eMessageStatus::Read);
 
     QCOMPARE(messages->size(), 1);
@@ -162,7 +162,7 @@ void MessageControllerTests::getMessageListByStatus_setInvalidChat_returnsNullpt
 
 void MessageControllerTests::getMessageListByStatus_setMessages_returnsCorrectList()
 {
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
     QList<Message*> allMessages = testChat->messages->derivedEntities();
     QList<Message*>* messages = messageController->getMessageListByStatus(allMessages, Message::eMessageStatus::Delivered);
 
@@ -194,11 +194,11 @@ void MessageControllerTests::addMessage_setChatAndMessage_addsMessage()
     Message* message = messageController->getMessageByFriend("FR0002", "MS0003");
     validateMessage3(message);
 
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
 
     messageController->addMessage(testChat, message);
 
-    testChat = messageController->getChat("FR0001");
+    testChat = messageController->getChatByFriend("FR0001");
 
     QCOMPARE(testChat->reference->value(), QString("CHT0001"));
     QCOMPARE(testChat->friendInChatReference->value(), QString("FR0001"));
@@ -212,11 +212,11 @@ void MessageControllerTests::addMessage_setChatAndMessage_addsMessage()
 
 void MessageControllerTests::addMessage_setChatAndParameters_addsMessage()
 {
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
     messageController->addMessage(testChat, "MS0005", "Hi!", Message::eMessageType::Incoming,
                                   QDateTime(QDate(2017, 8, 20), QTime(20, 00)));
 
-    testChat = messageController->getChat("FR0001");
+    testChat = messageController->getChatByFriend("FR0001");
     QList<Message*>& messages = testChat->messages->derivedEntities();
     QCOMPARE(messages.size(), 3);
 
@@ -234,7 +234,7 @@ void MessageControllerTests::addMessage_setFriendReferenceAndMessage_addsMessage
 {
     Message* message = messageController->getMessageByFriend("FR0002", "MS0003");
     messageController->addMessage("FR0001", message);
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
 
     QCOMPARE(testChat->reference->value(), QString("CHT0001"));
     QCOMPARE(testChat->friendInChatReference->value(), QString("FR0001"));
@@ -251,7 +251,7 @@ void MessageControllerTests::addMessage_setFriendReferenceAndParameters_addsMess
     messageController->addMessage("FR0001", "MS0006", "I wanna die!", Message::eMessageType::Outgoing,
                                   QDateTime(QDate(2017, 8, 20), QTime(11, 00)));
 
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
     QList<Message*>& messages = testChat->messages->derivedEntities();
     QCOMPARE(messages.size(), 3);
 
@@ -269,7 +269,7 @@ void MessageControllerTests::addMessage_setInvalidChat_doesNothind()
 {
     messageController->addMessage(nullptr, "MS0006", "I wanna die!", Message::eMessageType::Outgoing,
                                   QDateTime(QDate(2017, 8, 20), QTime(11, 00)));
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
     QList<Message*>& messages = testChat->messages->derivedEntities();
     QCOMPARE(messages.size(), 2);
 }
@@ -278,7 +278,7 @@ void MessageControllerTests::addMessage_setInvalidFriendReference_doesNothing()
 {
     messageController->addMessage("FR0000", "MS0006", "I wanna die!", Message::eMessageType::Outgoing,
                                   QDateTime(QDate(2017, 8, 20), QTime(11, 00)));
-    ChatModel* testChat = messageController->getChat("FR0001");
+    ChatModel* testChat = messageController->getChatByFriend("FR0001");
     QList<Message*>& messages = testChat->messages->derivedEntities();
     QCOMPARE(messages.size(), 2);
 }

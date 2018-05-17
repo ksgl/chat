@@ -92,22 +92,6 @@ Message::Message(QObject *parent, const QString& newReference,
     this->messageData->setValue(newMessageData);
 }
 
-void Message::changeMessageStatus(eMessageStatus newStatus)
-{
-    this->messageStatus->setValue(newStatus);
-    emit messageStatusChanged();
-}
-
-void Message::changeMessageStatus(QString newStatus)
-{
-    for (auto pair : messageStatusMapper) {
-        if (pair.second == newStatus) {
-            this->messageStatus->setValue(pair.first);
-            emit messageStatusChanged();
-            break;
-        }
-    }
-}
 
 }
 }

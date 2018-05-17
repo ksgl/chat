@@ -37,9 +37,6 @@ public:
     QQmlListProperty<chat::models::Friend> ui_friends();
     QQmlListProperty<chat::models::ChatModel> ui_chats();
 
-public slots:
-    void addFriend();
-    void addChat(Friend* friendInChat);
 
 signals:
     void friendsChanged();

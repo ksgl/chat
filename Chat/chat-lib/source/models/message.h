@@ -70,9 +70,6 @@ public:
 signals:
     void messageStatusChanged();
 
-public slots:
-    void changeMessageStatus(eMessageStatus newStatus);
-    void changeMessageStatus(QString newStatus);
 };
 
 }

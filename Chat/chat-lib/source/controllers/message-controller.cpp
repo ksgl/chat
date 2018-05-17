@@ -85,7 +85,7 @@ void MessageController::addMessage(chat::models::ChatModel* _chat,
 
 void MessageController::addMessage(const QString& friendReference, const models::Message* _message )
 {
-    ChatModel* _chat = getChat(friendReference);
+    ChatModel* _chat = getChatByFriend(friendReference);
     if (_chat == nullptr)
     {
         _chat = new ChatModel(implementation->user);
@@ -100,7 +100,7 @@ void MessageController::addMessage(const QString& friendReference,
                                    Message::eMessageType type,
                                    const QDateTime& sendAt)
 {
-    ChatModel* _chat = getChat(friendReference);
+    ChatModel* _chat = getChatByFriend(friendReference);
     if (_chat == nullptr)
     {
         _chat = new ChatModel(implementation->user);
@@ -109,7 +109,7 @@ void MessageController::addMessage(const QString& friendReference,
     addMessage(_chat, reference, messageData, type, sendAt);
 }
 
-models::ChatModel* MessageController::getChat(const QString& friendReference) const
+models::ChatModel* MessageController::getChatByFriend(const QString& friendReference) const
 {
     QList<ChatModel*> chats = implementation->user->chats->derivedEntities();
     for (auto _chat : chats)
@@ -139,7 +139,7 @@ models::Message* MessageController::getMessageByChat(const models::ChatModel* _c
 }
 models::Message* MessageController::getMessageByFriend(const QString& friendReference, const QString &messageReference) const
 {
-    ChatModel* _chat = getChat(friendReference);
+    ChatModel* _chat = getChatByFriend(friendReference);
     if (_chat != nullptr)
     {
         return getMessageByChat(_chat, messageReference);
@@ -188,7 +188,7 @@ QList<models::Message*>& MessageController::getMessageListByFriend(const models:
 //Сломается, если такого чата нет
 QList<models::Message*>& MessageController::getMessageListByFriend(const QString& friendReference) const
 {
-    ChatModel* _chat = getChat(friendReference);
+    ChatModel* _chat = getChatByFriend(friendReference);
     return _chat->messages->derivedEntities();
 }
 
@@ -219,6 +219,7 @@ void MessageController::changeMessageStatus(const QString& messageReference, mod
 {
     Message* message = getMessage(messageReference);
     changeMessageStatus(message, newStatus);
+
 }
 
 void MessageController::changeMessageStatus(Message* message, Message::eMessageStatus newStatus)

@@ -50,7 +50,8 @@ SOURCES += \
     source/data/enumerator-decorator-tests.cpp \
     source/models/user-model-tests.cpp \
     source/controllers/friend-controller-tests.cpp \
-    source/controllers/message-controller-tests.cpp
+    source/controllers/message-controller-tests.cpp \
+    source/services/task-executor-callback-binder-tests.cpp
 
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
@@ -64,6 +65,7 @@ HEADERS += \
     source/data/enumerator-decorator-tests.h \
     source/models/user-model-tests.h \
     source/controllers/friend-controller-tests.h \
-    source/controllers/message-controller-tests.h
+    source/controllers/message-controller-tests.h \
+    source/services/task-executor-callback-binder-tests.h
 
 LIBS += -L$$PWD/../binaries/$$DESTINATION_PATH -lchat-lib

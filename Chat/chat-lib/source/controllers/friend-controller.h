@@ -21,7 +21,7 @@ public:
     explicit FriendController(QObject* parent = nullptr, models::UserModel* _user = nullptr);
     ~FriendController();
 
-public slots:
+public:
 
     void addFriend(const chat::models::Friend* _friend);
     void addFriend(const QString& reference, const QString& friendName, const QString& friendIp,

@@ -22,7 +22,7 @@ public:
     explicit MessageController(QObject* parent = nullptr, models::UserModel* _user = nullptr);
     ~MessageController();
 
-public slots:
+public:
 
     void addMessage(chat::models::ChatModel* _chat, const models::Message* _message );
     void addMessage(chat::models::ChatModel* _chat, const QString& reference,
@@ -36,7 +36,7 @@ public slots:
                                                     models::Message::eMessageType type,
                                                     const QDateTime& sendAt);
 
-    models::ChatModel* getChat(const QString& friendReference) const;
+    models::ChatModel* getChatByFriend(const QString& friendReference) const;
     models::Message* getMessageByChat(const models::ChatModel* _chat, const QString &messageReference) const;
     models::Message* getMessageByFriend(const QString& friendReference, const QString &messageReference) const;
     models::Message* getMessage(const QString& messageReference) const;
