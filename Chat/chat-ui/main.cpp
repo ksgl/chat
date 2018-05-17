@@ -9,6 +9,7 @@
 #include <framework/command.h>
 #include <framework/object-factory.h>
 #include <models/chat-model.h>
+#include <models/message.h>
 
 int main(int argc, char *argv[])
 {
@@ -24,6 +25,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<chat::framework::Command>("CHAT", 1, 0, "Command");
     qmlRegisterType<chat::data::StringDecorator>("CHAT", 1, 0, "StringDecorator");
     qmlRegisterType<chat::models::ChatModel>("CHAT", 1, 0, "ChatModel");
+    qmlRegisterType<chat::models::Message>("CHAT", 1, 0, "Message");
 
     chat::framework::ObjectFactory objectFactory;
     chat::controllers::MasterController masterController(nullptr, &objectFactory);

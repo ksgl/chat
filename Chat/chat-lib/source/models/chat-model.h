@@ -37,6 +37,7 @@ public slots:
     void addMessage();
     void setFriendReference(Friend* _friendInChat);
     void setFriendReference(QString& reference);
+    void sendMessage(QString& message);
 };
 
 

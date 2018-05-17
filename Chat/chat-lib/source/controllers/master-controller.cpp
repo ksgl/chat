@@ -14,12 +14,17 @@ public:
     {
         navigationController = objectFactory->createNavigationController(masterController);
         commandController = objectFactory->createCommandController(masterController, navigationController);
+        newChatModel = new models::ChatModel(masterController);
+        newMessage = new models::Message(masterController);
     }
 
     IObjectFactory* objectFactory{nullptr};
     MasterController* masterController{nullptr};
     INavigationController* navigationController{nullptr};
     ICommandController* commandController{nullptr};
+    models::ChatModel* newChatModel{nullptr};
+    models::Message* newMessage{nullptr};
+
 
     QString welcomeMessage = "Welcome to the Chat!";
 
@@ -46,6 +51,16 @@ ICommandController* MasterController::commandController()
 const QString& MasterController::welcomeMessage() const
 {
     return implementation->welcomeMessage;
+}
+
+models::ChatModel* MasterController::newChatModel()
+{
+    return implementation->newChatModel;
+}
+
+models::Message* MasterController::newMessage()
+{
+    return implementation->newMessage;
 }
 
 }

@@ -42,5 +42,10 @@ void ChatModel::addMessage()
     emit messagesChanged();
 }
 
+void ChatModel::sendMessage(QString &message)
+{
+    //messages->setValue(message);
+}
+
 }
 }
