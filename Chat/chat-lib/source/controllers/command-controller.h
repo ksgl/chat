@@ -36,6 +36,20 @@ public:
     QQmlListProperty<framework::Command> ui_chatViewContextCommands();
 
 signals:
+    void LoginCommandExecuted(QString data);
+    void RegisterCommandExecuted(QString data);
+    //void FindChatCommandExecuted(QString data);
+    void AddChatCommandExecuted(QString data);
+    //void RefreshChatListCommandExecuted(Qstring data);
+    void SendMessageCommandExecuted(QString data);
+    //void RefreshChatCommandExecuted(QString data);
+    //void FindFriendCommandExecuted(QString data);
+    //void RefreshFriendListCommandExecuted(QString data);
+    void FindNewFriendCommandExecuted(QString data);
+    //void AddToFriendsCommandExecuted(QString data);
+    //void ConfirmFriendRequest(QString data);
+    //void DeclineFriendRequest(QString data);
+    void ExitCommandExecuted();
 
 public slots:
     void onLoginExecuted();
@@ -57,8 +71,7 @@ public slots:
     void onConfirmFriendRequest();
     void onDeclineFriendRequest();
     void onExitExecuted();
-
-
+    void onChatListViewExecuted();
 
 private:
     class Implementation;

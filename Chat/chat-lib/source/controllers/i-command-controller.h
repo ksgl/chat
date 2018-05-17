@@ -55,6 +55,24 @@ public slots:
     virtual void onConfirmFriendRequest() = 0;
     virtual void onDeclineFriendRequest() = 0;
     virtual void onExitExecuted() = 0;
+    virtual void onChatListViewExecuted() = 0;
+
+signals:
+
+    virtual void LoginCommandExecuted(QString data) = 0;
+    virtual void RegisterCommandExecuted(QString data) =0;
+    //virtual void FindChatCommandExecuted(QString data);
+    virtual void AddChatCommandExecuted(QString data) = 0;
+    //virtual void RefreshChatListCommandExecuted(Qstring data);
+    virtual void SendMessageCommandExecuted(QString data) = 0;
+    //void RefreshChatCommandExecuted(QString data);
+    //void FindFriendCommandExecuted(QString data);
+    //void RefreshFriendListCommandExecuted(QString data);
+    virtual void FindNewFriendCommandExecuted(QString data) = 0;
+    //void AddToFriendsCommandExecuted(QString data);
+    //void ConfirmFriendRequest(QString data);
+    //void DeclineFriendRequest(QString data);
+    virtual void ExitCommandExecuted() = 0;
 
 };
 

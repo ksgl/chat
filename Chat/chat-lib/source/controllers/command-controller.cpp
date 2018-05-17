@@ -152,24 +152,17 @@ QQmlListProperty<Command> CommandController::ui_chatViewContextCommands()
 void CommandController::onLoginExecuted()
 {
     qDebug() << "You executed the LOGIN command!";
-    implementation->navigationController->goChatListView();
-}
-
-void CommandController::onLoginViewExecuted()
-{
-    qDebug() << "You executed the GO_TO_LOGIN command!";
-    implementation->navigationController->goLoginView();
-}
-
-void CommandController::onRegisterViewExecuted()
-{
-    implementation->navigationController->goRegistrationView();
+    QString data = "Login and Password Data From GUI";
+    implementation->commandController->LoginCommandExecuted(data);
+    //implementation->navigationController->goChatListView();
 }
 
 void CommandController::onRegisterExecuted()
 {
     qDebug() << "You executed the REGISTER command!";
-    implementation->navigationController->goChatListView();
+    QString data = "Login and Password Data From GUI";
+    implementation->commandController->RegisterCommandExecuted(data);
+    //implementation->navigationController->goChatListView();
 }
 
 void CommandController::onFindChatExecuted()
@@ -180,6 +173,8 @@ void CommandController::onFindChatExecuted()
 void CommandController::onAddChatExecuted()
 {
     qDebug() << "You executed the ADD_CHAT command!";
+    QString data = "Friend Reference From GUI";
+    implementation->commandController->AddChatCommandExecuted(data);
 }
 
 void CommandController::onRefreshChatListExecuted()
@@ -190,6 +185,8 @@ void CommandController::onRefreshChatListExecuted()
 void CommandController::onSendMessageExecuted()
 {
     qDebug() << "You executed the SEND_MESSAGE command!";
+    QString data = "Message data from GUI";
+    implementation->commandController->SendMessageCommandExecuted(data);
 }
 
 void CommandController::onRefreshChatExecuted()
@@ -215,21 +212,13 @@ void CommandController::onRefreshFriendListExecuted()
 void CommandController::onFindNewFriendExecuted()
 {
     qDebug() << "You executed the FIND_NEW_FRIEND command!";
+    QString data = "Friend Name from GUI";
+    implementation->commandController->FindNewFriendCommandExecuted(data);
 }
 
 void CommandController::onAddToFriendsExecuted()
 {
     qDebug() << "You executed the ADD_TO_FRIENDS command!";
-}
-
-void CommandController::onRequestsFriendsViewExecuted()
-{
-    implementation->navigationController->goRequestsFriendsView();
-}
-
-void CommandController::onResponcesFriendsViewExecuted()
-{
-    implementation->navigationController->goResponcesFriendsView();
 }
 
 void CommandController::onConfirmFriendRequest()
@@ -244,7 +233,34 @@ void CommandController::onDeclineFriendRequest()
 
 void CommandController::onExitExecuted()
 {
+    implementation->commandController->ExitCommandExecuted();
     implementation->navigationController->goLoginView();
+}
+
+void CommandController::onLoginViewExecuted()
+{
+    qDebug() << "You executed the GO_TO_LOGIN command!";
+    implementation->navigationController->goLoginView();
+}
+
+void CommandController::onChatListViewExecuted()
+{
+    implementation->navigationController->goChatListView();
+}
+
+void CommandController::onRegisterViewExecuted()
+{
+    implementation->navigationController->goRegistrationView();
+}
+
+void CommandController::onRequestsFriendsViewExecuted()
+{
+    implementation->navigationController->goRequestsFriendsView();
+}
+
+void CommandController::onResponcesFriendsViewExecuted()
+{
+    implementation->navigationController->goResponcesFriendsView();
 }
 
 }
