@@ -7,12 +7,17 @@
 
 #include <boost/asio.hpp>
 #include <boost/asio/ip/udp.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 #include <string>
 #include <map>
 #include <functional>
 #include <thread>
 #include <mutex>
 #include <exception>
+
+
 
 // id to generate
 struct Link {
@@ -40,14 +45,19 @@ public:
     }
 
     virtual void handle(const Message& msg) {
-        auto id = msg.payload["id"].get<std::string>();
-        if (id no) {
-            //create json
+       /* auto id = msg.payload["id"].get<std::string>();
+       if () {
+            nlohmann::json answer;
+            boost::uuids::uuid uuid_answ = generator();
+            answer["id"] = uuid_answ;
+            answer["command"] = "message.receive";
+            answer["payload"]["text"] = ""
             oclb(js);
         }
         else {
-            command_callbacks[id](msg.payload);
-        }
+        */
+            command_callbacks["id"](msg.payload);
+        //}
         
         // remember endpoint from user
         // tipa messeg
@@ -76,7 +86,8 @@ private:
     std::map<std::string, Link> user_links; // соответствие чел <-> ip, ip of peer
     std::map<std::string, Callback> command_callbacks; // id <-> call CHECKS!
     Callback oclb = [](const nlohmann::json&){}; // пустая функция
-    
+    boost::uuids::random_generator generator;
+
     std::mutex mt;
 
     void execute(const nlohmann::json& j, const Callback& callback) {
@@ -84,7 +95,7 @@ private:
         
         // user.register
         if(cmd["command"].get<std::string>() == "user.register") {
-            command_callbacks[cmd["payload"]["id"].get<std::string>()] = callback;
+            command_callbacks[cmd["id"].get<std::string>()] = callback;
             Message msg;
             msg.from = serv.get_default_local_endpoint();
             msg.to = server_endpoint;
@@ -94,7 +105,7 @@ private:
 
         // user.login
         else if (cmd["command"].get<std::string>() == "user.login") {
-            command_callbacks[cmd["payload"]["id"].get<std::string>()] = callback;
+            command_callbacks[cmd["id"].get<std::string>()] = callback;
             Message msg;
             msg.from = serv.get_default_local_endpoint();
             msg.to = server_endpoint;
@@ -104,7 +115,7 @@ private:
 
         // user.add_friend
         else if (cmd["command"].get<std::string>() == "user.add_friend") {
-            command_callbacks[cmd["payload"]["id"].get<std::string>()] = callback;
+            command_callbacks[cmd["id"].get<std::string>()] = callback;
             Message msg;
             msg.from = serv.get_default_local_endpoint();
             msg.to = server_endpoint;
@@ -114,11 +125,10 @@ private:
 
          // user.message_send
         else if (cmd["command"].get<std::string>() == "message.send") {
-            command_callbacks[cmd["payload"]["id"].get<std::string>()] = callback;
+            command_callbacks[cmd["id"].get<std::string>()] = callback;
             Message msg;
             msg.from = serv.get_default_local_endpoint(); 
-            //msg.to = // map
-            
+           // msg.to = cmd["payload"]["message"]["to"]; // update with p2p logic
             msg.payload = cmd["payload"];
             serv.send(msg);
         }
