@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>components/ChatButton.qml</file>
+        <file>components/IconButton.qml</file>
+        <file>components/SmallLeftBar.qml</file>
+        <file>components/images/loupe.png</file>
+        <file>components/images/message.png</file>
+        <file>components/images/settings.png</file>
+        <file>components/BigLeftBar.qml</file>
+    </qresource>
+    <qresource prefix="/comp"/>
+</RCC>

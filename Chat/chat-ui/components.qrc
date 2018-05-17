@@ -1,0 +1,34 @@
+<RCC>
+    <qresource prefix="/components">
+        <file alias="qmldir">components/qmldir</file>
+        <file alias="NavigationButton.qml">components/NavigationButton.qml</file>
+        <file alias="NavigationBar.qml">components/NavigationBar.qml</file>
+        <file alias="CommandBar.qml">components/CommandBar.qml</file>
+        <file alias="CommandButton.qml">components/CommandButton.qml</file>
+        <file alias="StringEditorSingleLine.qml">components/StringEditorSingleLine.qml</file>
+        <file alias="Panel.qml">components/Panel.qml</file>
+        <file alias="AddressEditor.qml">components/AddressEditor.qml</file>
+        <file alias="SearchResultDelegate.qml">components/SearchResultDelegate.qml</file>
+        <file alias="RssItemDelegate.qml">components/RssItemDelegate.qml</file>
+        <file alias="EnumeratorSelector.qml">components/EnumeratorSelector.qml</file>
+        <file alias="EnumeratorSelectorView.qml">components/EnumeratorSelectorView.qml</file>
+        <file alias="FormButton.qml">components/FormButton.qml</file>
+        <file alias="ContactDelegate.qml">components/ContactDelegate.qml</file>
+        <file alias="ContactsEditor.qml">components/ContactsEditor.qml</file>
+        <file alias="LabelAndText.qml">components/LabelAndText.qml</file>
+    </qresource>
+
+    <qresource prefix="/">
+        <file>images/loupe.png</file>
+        <file>images/message.png</file>
+        <file>images/settings.png</file>
+        <file>images/exit.png</file>
+        <file>images/friends.png</file>
+        <file>images/lines.png</file>
+        <file>images/Albert_Einstein.png</file>
+        <file>images/Ernest_Hemingway.png</file>
+        <file>images/Hans_Gude.png</file>
+    </qresource>
+    <qresource prefix="/image"/>
+
+</RCC>
