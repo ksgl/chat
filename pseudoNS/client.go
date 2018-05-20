@@ -105,7 +105,7 @@ func main() {
 
 			 */
 			//c.sendingMessageQueue <- "client says hello at " + time.Now().Format("15:04:05")
-			messege := string(`{"command":"n.user.register","payload":{"id":"1","login":"Ivan1998","password":"sweethomealabama"}}`)
+			messege := string(`{"command":"user.register","id":"1","payload":{"login":"Ivan19","password":"sweethomealabam"}}`)
 			c.sendingMessageQueue <- messege
 		}
 	}
