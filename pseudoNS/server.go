@@ -34,8 +34,8 @@ const port = 1337
 
 type Messege struct {
 	Command string `json:"command"`
+	ID string `json:"id"`
 	Payload struct {
-		ID            string `json:"id"`
 		Login         string `json:"login"`
 		Password      string `json:"password"`
 		MyLogin       string `json:"my_login"`
@@ -84,7 +84,7 @@ func (s *Server) handleMessage() {
 	// respond with something ?
 	s.client = addr
 
-	db, err := sql.Open("mysql", "root:546595@tcp(127.0.0.1:3306)/chat")
+	db, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/chat")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -112,7 +112,7 @@ func (s *Server) handleMessage() {
 
 	switch msg_struct.Command {
 
-	case "n.user.register":
+	case "user.register":
 
 		//check is avalible
 		//SELECT `id` FROM `chat` WHERE `id` IS NOT NULL AND `login` LIKE 'root'
@@ -125,7 +125,7 @@ func (s *Server) handleMessage() {
 
 
 		if check_null.Valid {
-			s.messages <- "FAIL LOGIN ALREADY EXISTS"
+			s.messages <-string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)
 			break
 		}
 		//INSERT INTO `chat` (`id`, `login`, `password`, `IP`) VALUES (NULL, 'login', 'passwd', '127.0.0.1:1447');
@@ -135,19 +135,20 @@ func (s *Server) handleMessage() {
 			 string(msg_struct.Payload.Login), string(msg_struct.Payload.Password), IP)
 		if err != nil {
 			log.Fatal(err)
-			s.messages <- "FAIL INSERT"
+			s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL INSERT"
 			return
 		}
 		rowsAffected, err := insert.RowsAffected()
 		if err != nil {
 			log.Fatal(err)
-			s.messages <- "FAIL INSERT"
+			s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL INSERT"
 			return
 		}
 
 		log.Printf("Cliet %s created successfully (%d row affected)\n", addr, rowsAffected)
+		s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"OK"}"`)
 
-	case "n.user.login":
+	case "user.login":
 		var check_null sql.NullString
 		_ = db.QueryRow("select login from chat where id is not null and login = ?",
 			msg_struct.Payload.Login).Scan(&check_null)
@@ -167,33 +168,34 @@ func (s *Server) handleMessage() {
 					IP, string(msg_struct.Payload.Login))
 				if err != nil {
 					log.Fatal(err)
-					s.messages <- "FAIL UPDATE IP"
+					s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL UPDATE IP"
 					return
 				}
 				rowsAffected, err := insert.RowsAffected()
 				if err != nil {
 					log.Fatal(err)
-					s.messages <- "FAIL UPDATE IP"
+					s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL UPDATE IP"
 					return
 				}
 
 				log.Printf("Cliet %s created successfully (%d row affected)\n", addr, rowsAffected)
+				s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"OK"}"`)//"OK | " + check_user.Payload.IP
 
 
 			} else {
-				s.messages <- "FAIL WRONG PASSWORD"
+				s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL WRONG PASSWORD"
 				break
 			}
 
 		} else {
-			s.messages <- "FAIL USER MUST BE REGISTRATION"
+			s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL USER MUST BE REGISTRATION"
 			break
 		}
 
 
 
 
-	case "n.user.add_friend":
+	case "user.add_friend":
 		var check_null sql.NullString
 		_ = db.QueryRow("select login from chat where id is not null and login = ?",
 			msg_struct.Payload.MyLogin).Scan(&check_null)
@@ -205,10 +207,10 @@ func (s *Server) handleMessage() {
 			_ = db.QueryRow("select IP from chat where id is not null and login = ?",
 				msg_struct.Payload.FriendLogin).Scan(check_user.Payload.IP)
 
-			s.messages <- "OK | " + check_user.Payload.IP
+			s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"OK"}"`)//"OK | " + check_user.Payload.IP
 
 		} else {
-			s.messages <- "FAIL USER MUST BE REGISTRATION"
+			s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL USER MUST BE REGISTRATION"
 			break
 		}
 
@@ -218,7 +220,8 @@ func (s *Server) handleMessage() {
 
 
 	default:
-		s.messages <- "FAIL" + time.Now().Format("15:04:05")
+		//s.messages <- "FAIL" + time.Now().Format("15:04:05")
+		s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL 666"
 		break
 	}
 	//s.messages <- "server says hello at " + time.Now().Format("15:04:05")
