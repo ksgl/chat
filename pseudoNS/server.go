@@ -84,7 +84,7 @@ func (s *Server) handleMessage() {
 	// respond with something ?
 	s.client = addr
 
-	db, err := sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/chat")
+	db, err := sql.Open("mysql", "root:@tcp(0.0.0.0:3306)/chat")
 	if err != nil {
 		log.Fatal(err)
 	}
