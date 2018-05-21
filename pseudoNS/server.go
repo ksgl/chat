@@ -125,7 +125,7 @@ func (s *Server) handleMessage() {
 
 
 		if check_null.Valid {
-			s.messages <-string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)
+			s.messages <-string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)
 			break
 		}
 		//INSERT INTO `chat` (`id`, `login`, `password`, `IP`) VALUES (NULL, 'login', 'passwd', '127.0.0.1:1447');
@@ -135,18 +135,18 @@ func (s *Server) handleMessage() {
 			 string(msg_struct.Payload.Login), string(msg_struct.Payload.Password), IP)
 		if err != nil {
 			log.Fatal(err)
-			s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL INSERT"
+			s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL INSERT"
 			return
 		}
 		rowsAffected, err := insert.RowsAffected()
 		if err != nil {
 			log.Fatal(err)
-			s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL INSERT"
+			s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL INSERT"
 			return
 		}
 
 		log.Printf("Cliet %s created successfully (%d row affected)\n", addr, rowsAffected)
-		s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"OK"}"`)
+		s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"OK"}"`)
 
 	case "user.login":
 		var check_null sql.NullString
@@ -168,27 +168,27 @@ func (s *Server) handleMessage() {
 					IP, string(msg_struct.Payload.Login))
 				if err != nil {
 					log.Fatal(err)
-					s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL UPDATE IP"
+					s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL UPDATE IP"
 					return
 				}
 				rowsAffected, err := insert.RowsAffected()
 				if err != nil {
 					log.Fatal(err)
-					s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL UPDATE IP"
+					s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL UPDATE IP"
 					return
 				}
 
 				log.Printf("Cliet %s created successfully (%d row affected)\n", addr, rowsAffected)
-				s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"OK"}"`)//"OK | " + check_user.Payload.IP
+				s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"OK"}"`)//"OK | " + check_user.Payload.IP
 
 
 			} else {
-				s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL WRONG PASSWORD"
+				s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL WRONG PASSWORD"
 				break
 			}
 
 		} else {
-			s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL USER MUST BE REGISTRATION"
+			s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL USER MUST BE REGISTRATION"
 			break
 		}
 
@@ -207,10 +207,10 @@ func (s *Server) handleMessage() {
 			_ = db.QueryRow("select IP from chat where id is not null and login = ?",
 				msg_struct.Payload.FriendLogin).Scan(check_user.Payload.IP)
 
-			s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"OK"}"`)//"OK | " + check_user.Payload.IP
+			s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"OK"}"`)//"OK | " + check_user.Payload.IP
 
 		} else {
-			s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL USER MUST BE REGISTRATION"
+			s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL USER MUST BE REGISTRATION"
 			break
 		}
 
@@ -221,7 +221,7 @@ func (s *Server) handleMessage() {
 
 	default:
 		//s.messages <- "FAIL" + time.Now().Format("15:04:05")
-		s.messages <- string(`"{"id":"`+ msg_struct.ID +`";"answer":"FAIL"}"`)//"FAIL 666"
+		s.messages <- string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL 666"
 		break
 	}
 	//s.messages <- "server says hello at " + time.Now().Format("15:04:05")
