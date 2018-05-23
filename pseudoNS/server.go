@@ -35,6 +35,12 @@ type Answer struct {
 	Answer string `json:"answer"`
 }
 
+type Answer_IP struct {
+	IP 	   string `json:"IP"`
+	ID     string `json:"id"`
+	Answer string `json:"answer"`
+}
+
 type Messege struct {
 	Command string `json:"command"`
 	Payload struct {
@@ -106,6 +112,7 @@ func (s *Server) handleMessage() {
 
 
 
+
 	err1 := json.Unmarshal(msge, &msg_struct)
 	if err1 != nil {
 		log.Fatal("error")
@@ -146,7 +153,7 @@ func (s *Server) handleMessage() {
 			break
 		}
 		//INSERT INTO `chat` (`id`, `login`, `password`, `IP`) VALUES (NULL, 'login', 'passwd', '127.0.0.1:1447');
-		log.Printf("Cliet %s hawe ip = %s and password = %s", msg_struct.Payload.Login, IP, msg_struct.Payload.Password)
+		log.Printf("Client %s have ip = %s and password = %s", msg_struct.Payload.Login, IP, msg_struct.Payload.Password)
 
 		insert ,err := db.Exec("INSERT INTO chat (login, password, IP) VALUES (?, ?, ?)",
 			string(msg_struct.Payload.Login), string(msg_struct.Payload.Password), IP)
@@ -164,7 +171,7 @@ func (s *Server) handleMessage() {
 			return
 		}
 
-		log.Printf("Cliet %s created successfully (%d row affected)\n", addr, rowsAffected)
+		log.Printf("Client %s created successfully (%d row affected)\n", addr, rowsAffected)
 
 		msg_answer_FAIL.Answer = "OK"
 
@@ -193,8 +200,8 @@ func (s *Server) handleMessage() {
 			if msg_struct.Payload.Password == check_user.Payload.Password {
 
 				//UPDATE `chat` SET `IP` = '0.0.0.0:1' WHERE `chat`.`login` = root
-				insert ,err := db.Exec("update set IP ? where  chat login = ?",
-					IP, string(msg_struct.Payload.Login))
+				insert ,err := db.Exec("update chat set IP=? where login=?",
+					string(IP), string(msg_struct.Payload.Login))
 				if err != nil {
 					log.Fatal(err)
 					s.messages <- string(answer_to_client_json)//string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL UPDATE IP"
@@ -209,7 +216,7 @@ func (s *Server) handleMessage() {
 					return
 				}
 
-				log.Printf("Cliet %s created successfully (%d row affected)\n", addr, rowsAffected)
+				log.Printf("Client %s created successfully (%d row affected)\n", addr, rowsAffected)
 				msg_answer_FAIL.Answer = "OK"
 
 				answer_to_client_json, err := json.Marshal(msg_answer_FAIL)
@@ -241,23 +248,31 @@ func (s *Server) handleMessage() {
 		var check_null sql.NullString
 		_ = db.QueryRow("select login from chat where id is not null and login = ?",
 			msg_struct.Payload.MyLogin).Scan(&check_null)
-		var check_user Messege
+		var check_user Answer_IP
 
 
 		if check_null.Valid {
 
 			_ = db.QueryRow("select IP from chat where id is not null and login = ?",
-				msg_struct.Payload.FriendLogin).Scan(check_user.Payload.IP)
+				msg_struct.Payload.FriendLogin).Scan(check_user.IP)
+
+
+			check_user.Answer = "OK"
+			check_user.ID = msg_struct.Payload.ID
 
 			msg_answer_FAIL.Answer = "OK"
 
-			answer_to_client_json, err := json.Marshal(msg_answer_FAIL)
+			//Использовать без IP тобишь {"id":"572e997d-7bfd-4a31-93f1-8256775c0fd1","answer":"OK"}
+			//answer_to_client_json, err := json.Marshal(msg_answer_FAIL)
+
+			//Использовать с IP тобишь {"id":"572e997d-7bfd-4a31-93f1-8256775c0fd1","answer":"OK","IP":"127.0.0.1:213"}
+			answer_to_client_json, err := json.Marshal(check_user)
 			if err != nil {
 				fmt.Println(err)
 				return
 			}
 
-			s.messages <- string(answer_to_client_json) //string(`"{"id":"`+ msg_struct.ID +`","answer":"OK"}"`)//"OK | " + check_user.Payload.IP
+			s.messages <- string(answer_to_client_json) //string(`"{"id":"`+ msg_struct.ID +`","answer":"OK","IP":"127.0.0.1:213"}"`)//"OK | " + check_user.Payload.IP
 			log.Print(string(answer_to_client_json))
 
 		} else {
