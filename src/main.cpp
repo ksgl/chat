@@ -79,12 +79,19 @@ private:
     }
     
     bool execute_line(const std::string& str) {
-        if (str.empty()) {
+        if (str == "exit") {
             return false;
         }
+        else if (!str.empty()) {
+            try {
+                auto cmd = nlohmann::json::parse(str);
+                tex.execute_async(cmd, [this](const nlohmann::json& res){ this->process_result(res); });
+            }
+            catch (std::exception ex) {
+                std::cout << "Fail to send message to server: " << ex.what() << std::endl;
+            }
+        }
         
-        auto cmd = nlohmann::json::parse(str);
-        tex.execute_async(cmd, [this](const nlohmann::json& res){ this->process_result(res); });
         return true;
     }
     
@@ -124,7 +131,6 @@ int main(int argc, const char* argv[]) {
         
         boost::asio::io_service io_service;
         CLI cli(io_service);
-        
         io_service.run();
     }
     // Use fprintf here to avoid riscs of new uncaught exceptions.
@@ -138,36 +144,6 @@ int main(int argc, const char* argv[]) {
     }
     
     return exit_code;
-}
-
-void task_execution() {
-    int exit_code = EXIT_SUCCESS;
-    
-    try {
-        // Installing the critical signal handler.
-        struct ::sigaction signal_handler;
-        std::memset(&signal_handler, 0, sizeof(signal_handler));
-        signal_handler.sa_handler = handle_critical_signal;
-//      ::sigaction(SIGBUS,  &signal_handler, nullptr);
-        ::sigaction(SIGILL,  &signal_handler, nullptr);
-        ::sigaction(SIGABRT, &signal_handler, nullptr);
-        ::sigaction(SIGFPE,  &signal_handler, nullptr);
-        ::sigaction(SIGSEGV, &signal_handler, nullptr);
-        
-        boost::asio::io_service io_service;
-        CLI cli(io_service);
-        
-        io_service.run();
-    }
-    // Use fprintf here to avoid riscs of new uncaught exceptions.
-    catch (const std::exception& ex) {
-        std::fprintf(stderr, "\nError: %s\n", ex.what());
-        exit_code = EXIT_FAILURE;
-    }
-    catch (...) {
-        std::fprintf(stderr, "\nError: unknown\n");
-        exit_code = EXIT_FAILURE;
-    }
 }
 
 // {"command":"hello"}

@@ -97,6 +97,7 @@ private:
         }
         else {
             Message message_tmp;
+            receive_buffer_tmp_.resize(bytes_transferred);
             deserialize(receive_buffer_tmp_, message_tmp);
             message_tmp.from = remote_endpoint_tmp_;
             message_tmp.to = socket_.local_endpoint();
