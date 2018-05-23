@@ -37,8 +37,8 @@ type Answer struct {
 
 type Messege struct {
 	Command string `json:"command"`
-	ID string `json:"id"`
 	Payload struct {
+		ID 			  string `json:"id"`
 		Login         string `json:"login"`
 		Password      string `json:"password"`
 		MyLogin       string `json:"my_login"`
@@ -117,13 +117,14 @@ func (s *Server) handleMessage() {
 	//log.Printf(msg_command)
 
 	msg_answer_FAIL.Answer = "FAIL"
-	msg_answer_FAIL.ID = msg_struct.ID
+	msg_answer_FAIL.ID = msg_struct.Payload.ID
 
 	answer_to_client_json, err := json.Marshal(msg_answer_FAIL)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	//log.Print(string(answer_to_client_json))
 
 	switch msg_struct.Command {
 
@@ -141,6 +142,7 @@ func (s *Server) handleMessage() {
 
 		if check_null.Valid {
 			s.messages <- string(answer_to_client_json)//string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)
+			log.Print(string(answer_to_client_json))
 			break
 		}
 		//INSERT INTO `chat` (`id`, `login`, `password`, `IP`) VALUES (NULL, 'login', 'passwd', '127.0.0.1:1447');
@@ -151,12 +153,14 @@ func (s *Server) handleMessage() {
 		if err != nil {
 			log.Fatal(err)
 			s.messages <- string(answer_to_client_json)//string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL INSERT"
+			log.Print(string(answer_to_client_json))
 			return
 		}
 		rowsAffected, err := insert.RowsAffected()
 		if err != nil {
 			log.Fatal(err)
 			s.messages <- string(answer_to_client_json)//string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL INSERT"
+			log.Print(string(answer_to_client_json))
 			return
 		}
 
@@ -171,6 +175,7 @@ func (s *Server) handleMessage() {
 		}
 
 		s.messages <- string(answer_to_client_json)//string(`"{"id":"`+ msg_struct.ID +`","answer":"OK"}"`)
+		log.Print(string(answer_to_client_json))
 
 	case "user.login":
 		var check_null sql.NullString
@@ -193,12 +198,14 @@ func (s *Server) handleMessage() {
 				if err != nil {
 					log.Fatal(err)
 					s.messages <- string(answer_to_client_json)//string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL UPDATE IP"
+					log.Print(string(answer_to_client_json))
 					return
 				}
 				rowsAffected, err := insert.RowsAffected()
 				if err != nil {
 					log.Fatal(err)
 					s.messages <- string(answer_to_client_json)//string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL UPDATE IP"
+					log.Print(string(answer_to_client_json))
 					return
 				}
 
@@ -212,15 +219,18 @@ func (s *Server) handleMessage() {
 				}
 
 				s.messages <- string(answer_to_client_json)//string(`"{"id":"`+ msg_struct.ID +`","answer":"OK"}"`)//"OK | " + check_user.Payload.IP
+				log.Print(string(answer_to_client_json))
 
 
 			} else {
 				s.messages <- string(answer_to_client_json)//string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL WRONG PASSWORD"
+				log.Print(string(answer_to_client_json))
 				break
 			}
 
 		} else {
 			s.messages <- string(answer_to_client_json)//string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL USER MUST BE REGISTRATION"
+			log.Print(string(answer_to_client_json))
 			break
 		}
 
@@ -248,9 +258,11 @@ func (s *Server) handleMessage() {
 			}
 
 			s.messages <- string(answer_to_client_json) //string(`"{"id":"`+ msg_struct.ID +`","answer":"OK"}"`)//"OK | " + check_user.Payload.IP
+			log.Print(string(answer_to_client_json))
 
 		} else {
 			s.messages <- string(answer_to_client_json) //string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL USER MUST BE REGISTRATION"
+			log.Print(string(answer_to_client_json))
 			break
 		}
 
@@ -262,6 +274,7 @@ func (s *Server) handleMessage() {
 	default:
 		//s.messages <- "FAIL" + time.Now().Format("15:04:05")
 		s.messages <- string(answer_to_client_json) //string(`"{"id":"`+ msg_struct.ID +`","answer":"FAIL"}"`)//"FAIL 666"
+		log.Print(string(answer_to_client_json))
 		break
 	}
 	//s.messages <- "server says hello at " + time.Now().Format("15:04:05")
