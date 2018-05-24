@@ -61,7 +61,7 @@ public:
                 }
             }
             else {
-                if (oclb != nullptr) {
+                if (oclb != nullptr) { // !!!!!!!!!!!
                     oclb(msg.payload);
                 }
                 else {
@@ -105,7 +105,7 @@ private:
         cmd["payload"]["id"] = id;
         
         //std::cout << cmd.dump();
-        
+     
         // user.register
         if (cmd.find("command") != cmd.end() && cmd["command"].is_string() && cmd["command"].get<std::string>() == "user.register") {
             command_callbacks[id] = callback;
@@ -143,7 +143,7 @@ private:
             msg.from = serv.get_default_local_endpoint();
             boost::asio::ip::udp::endpoint to_endpoint{boost::asio::ip::address::from_string(cmd["payload"]["message"]["to_ip"]), 8080};
             msg.to = to_endpoint;
-            msg.payload = cmd["payload"]["message"]["text"];
+            msg.payload = cmd;
             serv.send(msg);
         }
         
