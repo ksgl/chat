@@ -61,8 +61,9 @@ public:
                 }
             }
             else {
-                if (oclb != nullptr) { // !!!!!!!!!!!
+                if (oclb) {
                     oclb(msg.payload);
+                    std::cout << "Worked, received: " << msg.payload.dump();
                 }
                 else {
                     std::cout << "Fail to process this message: no orphan callback registered" << std::endl;
@@ -93,7 +94,7 @@ private:
     UDPServer serv;
     std::map<std::string, Link> user_links;
     std::map<std::string, Callback> command_callbacks;
-    Callback oclb = [](const nlohmann::json&){};
+    Callback oclb = [](nlohmann::json j){};
     
     std::mutex mt;
     

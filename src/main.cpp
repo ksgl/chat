@@ -132,6 +132,7 @@ int main(int argc, const char* argv[]) {
         boost::asio::io_service io_service;
         CLI cli(io_service);
         io_service.run();
+            
     }
     // Use fprintf here to avoid riscs of new uncaught exceptions.
     catch (const std::exception& ex) {
