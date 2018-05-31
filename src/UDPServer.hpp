@@ -13,6 +13,7 @@
 #include <cstdint>
 
 
+// Message struct used for UDPServer service, payload can be any
 struct Message {
     boost::asio::ip::udp::endpoint from;
     boost::asio::ip::udp::endpoint to;
