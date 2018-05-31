@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include <chat-lib_global.h>
+#include <models/chat-model.h>
 
 namespace chat {
 namespace controllers {

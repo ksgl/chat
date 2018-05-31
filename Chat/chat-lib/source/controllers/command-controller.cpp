@@ -72,22 +72,6 @@ public:
         QObject::connect(addToFriendsCommand, &Command::executed, commandController, &CommandController::onAddToFriendsExecuted);
         addFriendViewContextCommands.append(addToFriendsCommand);
 
-        Command* requestsFriendsViewCommand = new Command(commandController, QChar(0xf0c7), "Friend Requests");
-        QObject::connect(requestsFriendsViewCommand, &Command::executed, commandController, &CommandController::onRequestsFriendsViewExecuted);
-        addFriendViewContextCommands.append(requestsFriendsViewCommand);
-
-        Command* responcesFriendsViewCommand = new Command(commandController, QChar(0xf0c7), "Friends Responces");
-        QObject::connect(responcesFriendsViewCommand, &Command::executed, commandController, &CommandController::onResponcesFriendsViewExecuted);
-        addFriendViewContextCommands.append(responcesFriendsViewCommand);
-
-        Command* confirmFriendRequest = new Command(commandController, QChar(0xf0c7), "Confirm Request");
-        QObject::connect(confirmFriendRequest, &Command::executed, commandController, &CommandController::onConfirmFriendRequest);
-        addFriendViewContextCommands.append(confirmFriendRequest);
-
-        Command* declineFriendRequest = new Command(commandController, QChar(0xf0c7), "Decline Request");
-        QObject::connect(declineFriendRequest, &Command::executed, commandController, &CommandController::onDeclineFriendRequest);
-        addFriendViewContextCommands.append(declineFriendRequest);
-
         Command* exitCommand = new Command(commandController, QChar(0xf0c7), "Exit");
         QObject::connect(exitCommand, &Command::executed, commandController, &CommandController::onExitExecuted);
         exitViewContextCommands.append(exitCommand);
@@ -221,16 +205,6 @@ void CommandController::onAddToFriendsExecuted()
     qDebug() << "You executed the ADD_TO_FRIENDS command!";
 }
 
-void CommandController::onConfirmFriendRequest()
-{
-    qDebug() << "You executed the CONFIRM_REQUEST command!";
-}
-
-void CommandController::onDeclineFriendRequest()
-{
-    qDebug() << "You executed the DECLINE_REQUEST command!";
-}
-
 void CommandController::onExitExecuted()
 {
     implementation->commandController->ExitCommandExecuted();
@@ -243,7 +217,7 @@ void CommandController::onLoginViewExecuted()
     implementation->navigationController->goLoginView();
 }
 
-void CommandController::onChatListViewExecuted()
+void CommandController::onGoToChatListView()
 {
     implementation->navigationController->goChatListView();
 }
@@ -253,14 +227,24 @@ void CommandController::onRegisterViewExecuted()
     implementation->navigationController->goRegistrationView();
 }
 
-void CommandController::onRequestsFriendsViewExecuted()
+void CommandController::onChatDetailViewExecuted()
 {
-    implementation->navigationController->goRequestsFriendsView();
+    implementation->navigationController->goChatView();
 }
 
-void CommandController::onResponcesFriendsViewExecuted()
+void CommandController::onFriendListViewExcuted()
 {
-    implementation->navigationController->goResponcesFriendsView();
+    emit friendListViewRequested();
+}
+
+void CommandController::onGoToFriendListView()
+{
+    implementation->navigationController->goFriendListView();
+}
+
+void CommandController::onChatListViewExecuted()
+{
+    emit chatListViewRequested();
 }
 
 }

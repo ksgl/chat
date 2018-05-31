@@ -13,3 +13,6 @@ EnumeratorSelector 1.0 EnumeratorSelector.qml
 FormButton 1.0 FormButton.qml
 ContactDelegate 1.0 ContactDelegate.qml
 ContactsEditor 1.0 ContactsEditor.qml
+InputString 1.0 InputString.qml
+ChatListViewDelegate 1.0 ChatListViewDelegate.qml
+FriendListViewDelegate 1.0 FriendListViewDelegate.qml

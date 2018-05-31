@@ -94,6 +94,13 @@ Item {
     readonly property int pixelSizeFormButtonText: 22
     readonly property int sizeFormButtonRadius: 5
 
+    readonly property int inputStringLabelWidht: 100
+    readonly property int inputStringWidht: hscale(300)
+    readonly property color inputStringBorderColor: "grey"
+    readonly property color inputStringBackGroundClor: "white"
+    readonly property int inputStringHeight : 40
+
+
     FontLoader {
         id: fontAwesomeLoader
         source: "qrc:/assets/fontawesome.ttf"

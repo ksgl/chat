@@ -1,6 +1,6 @@
 #include "task-executor-callback-binder.h"
 
-#define INTMETHOD(m) CALLBACK(int, chat::services::ITaskExecutorCallbackBinder, m)
+#include <QJsonObject>
 
 using namespace chat::framework;
 using namespace std;
@@ -8,79 +8,60 @@ using namespace std;
 namespace chat {
 namespace services {
 
-typedef pair<string*, CallbackPtr<ITaskExecutorCallbackBinder, int>> NameCallbackPair;
+//typedef pair<string*, CallbackPtr<ITaskExecutorCallbackBinder, int>> NameCallbackPair;
 
 class TaskExecutorCallbackBinder::Implementation
 {
 public:
-    Implementation(ITaskExecutorCallbackBinder* _taskExecutorCallbackBinder)
-        : taskCallbackBinder(_taskExecutorCallbackBinder)
+    Implementation(TaskExecutorCallbackBinder* _taskExecutorCallbackBinder, TaskExecuterRunner* _task_exec)
+        : taskCallbackBinder(_taskExecutorCallbackBinder), task_exec(_task_exec)
     {
-        CallbackPtr<ITaskExecutorCallbackBinder, int> LoginReceivedCallback (taskCallbackBinder, INTMETHOD(LoginAnswerReceivedBinder));
-        string* CLoginName = new string("LoginAnswerRecieved");
-        NameCallbackPair LoginReceivedCallbackPair(CLoginName, LoginReceivedCallback);
-        callbacks.push_back(LoginReceivedCallbackPair);
-
-        CallbackPtr<ITaskExecutorCallbackBinder, int> RegistrationReceivedCallback (taskCallbackBinder, INTMETHOD(RegistrationAnswerReceivedBinder));
-        string* CRegName = new string("RegistrationAnswerRecieved");
-        NameCallbackPair RegistrationReceivedCallbackPair(CRegName, RegistrationReceivedCallback);
-        callbacks.push_back(RegistrationReceivedCallbackPair);
-
-        CallbackPtr<ITaskExecutorCallbackBinder, int> FriendReceivedCallback (taskCallbackBinder, INTMETHOD(FriendReceivedBinder));
-        string* CFrName = new string("FriendRecieved");
-        NameCallbackPair FriendReceivedCallbackPair(CFrName, FriendReceivedCallback);
-        callbacks.push_back(FriendReceivedCallbackPair);
-
-        CallbackPtr<ITaskExecutorCallbackBinder, int> MessageReceivedCallback (taskCallbackBinder, INTMETHOD(MessageReceivedBinder));
-        string* CMsName = new string("MessageRecieved");
-        NameCallbackPair MessageReceivedCallbackPair(CMsName, MessageReceivedCallback);
-        callbacks.push_back(MessageReceivedCallbackPair);
-
+        task_exec->set_orphan_message_callback([this](nlohmann::json json){ switchCommands(json) });
     }
 
-    ITaskExecutorCallbackBinder* taskCallbackBinder{nullptr};
-    vector<NameCallbackPair> callbacks{};
+    TaskExecutorCallbackBinder* taskCallbackBinder{nullptr};
+    TaskExecuterRunner* task_exec{nullptr};
 };
 
-TaskExecutorCallbackBinder::TaskExecutorCallbackBinder(QObject *parent) : QObject(parent)
+TaskExecutorCallbackBinder::TaskExecutorCallbackBinder(QObject *parent, TaskExecuterRunner *task_exec) : QObject(parent)
 {
-    implementation.reset(new Implementation(this));
+    implementation.reset(new Implementation(this, task_exec));
 }
 
 TaskExecutorCallbackBinder::~TaskExecutorCallbackBinder(){}
 
-vector<NameCallbackPair> TaskExecutorCallbackBinder::callbacks()
+int TaskExecutorCallbackBinder::switchCommands(nlohmann::json json)
 {
-    return implementation->callbacks;
+    std::string str_json = json.dump();
+    QString q_str(str_json.c_str());
+    QJsonDocument doc = QJsonDocument::fromJson(q_str.toUtf8());
+    models::NetCommandModel net_command(this, doc.object());
+
+    QString commandType = net_command.command_type->value();
+
+    if (commandType == "user.login")
+        emit LoginAnswerReceived(&net_command.payload);
+
+    else if (commandType == "user.register")
+        emit RegisterAnswerReceived(net_command.payload);
+
+    else if (commandType == "user.message_send")
+        emit MessageReceived(net_command.payload);
+
+    else if (commandType == "user.add_friend")
+        emit FriendReceived(net_command.payload);
 }
 
-int TaskExecutorCallbackBinder::LoginAnswerReceivedBinder(string* data)
+void TaskExecutorCallbackBinder::sendNetTask(QJsonObject &netTask)
 {
-    QString qdata(data->c_str());
-    emit LoginAnswerReceived(qdata);
-    return 0;
+    QJsonDocument doc(netTask);
+    QString strJson(doc.toJson(QJsonDocument::Compact));
+    std::string std_json = strJson.toStdString();
+    nlohmann::json n_lh_str = nlohmann::json::parse(std_json);
+
+    implementation->task_exec->execute_async(n_lh_str, [](nlohmann::json json){});
 }
 
-int TaskExecutorCallbackBinder::RegistrationAnswerReceivedBinder(string* data)
-{
-    QString qdata(data->c_str());
-    emit RegisterAnswerReceived(qdata);
-    return 0;
-}
-
-int TaskExecutorCallbackBinder::FriendReceivedBinder(string* data)
-{
-    QString qdata(data->c_str());
-    emit FriendReceived(qdata);
-    return 0;
-}
-
-int TaskExecutorCallbackBinder::MessageReceivedBinder(string* data)
-{
-    QString qdata(data->c_str());
-    emit MessageReceived(qdata);
-    return 0;
-}
 
 }
 }

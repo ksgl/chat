@@ -1,7 +1,10 @@
 #include "user-controller.h"
 
+#include <controllers/database-controller.h>
+
 #include <QList>
 #include <QDebug>
+#include <QJsonDocument>
 
 using namespace chat::models;
 
@@ -11,13 +14,10 @@ namespace controllers {
 class UserController::Implementation
 {
 public:
-    Implementation(UserController* _userController,
-                   FriendController* _friendController,
-                   MessageController* _messageController,
-                   UserModel* _user)
-        : userController(_userController),
-          user(_user)
+    Implementation(UserController* _userController, UserModel* _user)
+        : userController(_userController), user(_user)
     {
+        databaseController = new DatabaseController(userController);
         friendController = new FriendController(_userController, user);
         messageController = new MessageController(_userController, user);
     }
@@ -26,21 +26,46 @@ public:
     FriendController* friendController{nullptr};
     MessageController* messageController{nullptr};
     UserModel* user{nullptr};
+
+    IDatabaseController* databaseController{nullptr};
 };
 
-UserController::UserController(QObject *parent, FriendController* _friendController,
-                               MessageController* _messageController, UserModel* _user)
-    : IUserController(parent)
+UserController::UserController(QObject *parent, UserModel* _user)
+    : IUserController(), QObject(parent)
 {
-    implementation.reset(new Implementation(this, _friendController, _messageController, _user));
+    implementation.reset(new Implementation(this, _user));
 }
 
 UserController::~UserController(){}
 
+void UserController::uploadUser(QString userName)
+{
+    QJsonArray users = implementation->databaseController->find("users", userName);
+    if (users.count() == 0)
+    {
+        implementation->user->name->setValue(userName);
+        implementation->databaseController->createRow("users", userName, implementation->user->toJson());
+    }
+    else
+    {
+        implementation->user->update(users.at(0).toObject());
+        setUser(implementation->user);
+    }
+}
+
 void UserController::setUser(UserModel* _newUser)
 {
-    implementation.reset(new Implementation(this, implementation->friendController,
-                                            implementation->messageController, _newUser));
+    implementation.reset(new Implementation(this, _newUser));
+}
+
+const models::UserModel* UserController::currentUser() const
+{
+    return implementation->user;
+}
+
+QString UserController::currentUserName() const
+{
+    return implementation->user->name->value();
 }
 
 /*------------------------------------------------------------------
@@ -50,17 +75,20 @@ void UserController::setUser(UserModel* _newUser)
 void UserController::addFriend(const chat::models::Friend* _friend)
 {
     implementation->friendController->addFriend(_friend);
+    implementation->databaseController->updateRow("users", implementation->user->name->value(), implementation->user->toJson());
 }
 
 void UserController::addFriend(const QString& reference, const QString& friendName, const QString& friendIp,
                        const models::Friend::eStatus _status, const QDateTime& lastVisit)
 {
     implementation->friendController->addFriend(reference, friendName, friendIp, _status, lastVisit);
+    implementation->databaseController->updateRow("users", implementation->user->name->value(), implementation->user->toJson());
 }
 
 models::Friend* UserController::getFriend(const QString& friendReference) const
 {
-    return implementation->friendController->getFriend(friendReference);
+    models::Friend* _friend = implementation->friendController->getFriend(friendReference);
+    return _friend;
 }
 
 models::Friend* UserController::getFriendByName(const QString& friendName) const
@@ -110,13 +138,32 @@ void UserController::changeLastVisit(models::Friend* _friend, const QDateTime& n
 /*
 void UserController::addChat(const chat::models::Friend* _friend) {}
 void UserController::addChat(const QString& friendReference) {}
+*/
 
-models::ChatModel* UserController::getChat(const QString& chatReference) const {}
+models::ChatModel* UserController::getChat(const QString& chatReference) const
+{
+    QList<ChatModel*> chats = implementation->user->chats->derivedEntities();
+    for (auto _chat : chats)
+    {
+        if (_chat->reference->value() == chatReference)
+        {
+            return _chat;
+        }
+    }
+    return nullptr;
+}
+
+/*
 //models::ChatModel* UserController::getChatByFriend(const QString& friendReference) const {}
 models::ChatModel* UserController::getChatByFriendName(const QString& friendName) const {}
 //models::ChatModel* UserController::getChatByFriend(const models::Friend* _friend) const {}
-QList<models::ChatModel*>& UserController::getChats() const {}
 */
+
+QList<models::ChatModel*>& UserController::getChatList() const
+{
+    return implementation->user->chats->derivedEntities();
+}
+
 
 /*------------------------------------------------------------------
  * BLOCK "MESSAGE MANAGER" *
@@ -125,6 +172,7 @@ QList<models::ChatModel*>& UserController::getChats() const {}
 void UserController::addMessage(chat::models::ChatModel* _chat, const models::Message* _message )
 {
     implementation->messageController->addMessage(_chat, _message);
+    implementation->databaseController->updateRow("users", implementation->user->name->value(), implementation->user->toJson());
 }
 
 void UserController::addMessage(chat::models::ChatModel* _chat, const QString& reference,
@@ -133,11 +181,13 @@ void UserController::addMessage(chat::models::ChatModel* _chat, const QString& r
                                                       const QDateTime& sendAt)
 {
     implementation->messageController->addMessage(_chat, reference, messageData, type, sendAt);
+    implementation->databaseController->updateRow("users", implementation->user->name->value(), implementation->user->toJson());
 }
 
 void UserController::addMessage(const QString& friendReference, const models::Message* _message )
 {
     implementation->messageController->addMessage(friendReference, _message);
+    implementation->databaseController->updateRow("users", implementation->user->name->value(), implementation->user->toJson());
 }
 
 void UserController::addMessage(const QString& friendReference, const QString& reference,
@@ -146,6 +196,7 @@ void UserController::addMessage(const QString& friendReference, const QString& r
                                                 const QDateTime& sendAt)
 {
     implementation->messageController->addMessage(friendReference, reference, messageData, type, sendAt);
+    implementation->databaseController->updateRow("users", implementation->user->name->value(), implementation->user->toJson());
 }
 
 models::ChatModel* UserController::getChatByFriend(const QString& friendReference) const

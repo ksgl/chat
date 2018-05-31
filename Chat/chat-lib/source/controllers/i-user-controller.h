@@ -1,9 +1,6 @@
 #ifndef IUSERCONTROLLER_H
 #define IUSERCONTROLLER_H
 
-#include <QObject>
-#include <QString>
-#include <QScopedPointer>
 
 #include <chat-lib_global.h>
 
@@ -15,16 +12,17 @@
 namespace chat {
 namespace controllers {
 
-class CHATLIBSHARED_EXPORT IUserController : public QObject
+class CHATLIBSHARED_EXPORT IUserController
 {
-    Q_OBJECT
 
 public:
-    IUserController(QObject* parent = nullptr) : QObject(parent){}
+    IUserController(){}
     virtual ~IUserController(){}
 
     virtual const models::UserModel* currentUser() const = 0;
+    virtual void uploadUser(QString userName) = 0;
     virtual void setUser(chat::models::UserModel* _newUser) = 0;
+    virtual QString currentUserName() const = 0;
 
 public:
 
@@ -55,12 +53,14 @@ public:
     virtual void addChat(const chat::models::Friend* _friend) = 0;
     virtual void addChat(const QString& friendReference) = 0;
 
+    */
     virtual models::ChatModel* getChat(const QString& chatReference) const = 0;
     //virtual models::ChatModel* getChatByFriend(const QString& friendReference) const = 0;
+    /*
     virtual models::ChatModel* getChatByFriendName(const QString& friendName) const = 0;
     virtual models::ChatModel* getChatByFriend(const models::Friend* _friend) const = 0;
-    virtual QList<models::ChatModel*>& getChats() const = 0;
     */
+    virtual QList<models::ChatModel*>& getChatList() const = 0;
 
     /*------------------------------------------------------------------
      * BLOCK "MESSAGE MANAGER" *

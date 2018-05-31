@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QtQml/QQmlListProperty>
 #include <framework/command.h>
+#include <models/chat-model.h>
 
 #include <chat-lib_global.h>
 
@@ -50,12 +51,12 @@ public slots:
     virtual void onRefreshFriendListExecuted() = 0;
     virtual void onFindNewFriendExecuted() = 0;
     virtual void onAddToFriendsExecuted() = 0;
-    virtual void onRequestsFriendsViewExecuted() = 0;
-    virtual void onResponcesFriendsViewExecuted() = 0;
-    virtual void onConfirmFriendRequest() = 0;
-    virtual void onDeclineFriendRequest() = 0;
     virtual void onExitExecuted() = 0;
     virtual void onChatListViewExecuted() = 0;
+    virtual void onChatDetailViewExecuted() = 0;
+    virtual void onFriendListViewExcuted() = 0;
+    virtual void onGoToFriendListView() = 0;
+    virtual void onGoToChatListView() = 0;
 
 signals:
 
@@ -73,6 +74,8 @@ signals:
     //void ConfirmFriendRequest(QString data);
     //void DeclineFriendRequest(QString data);
     virtual void ExitCommandExecuted() = 0;
+    void friendListViewRequested();
+    void chatListViewRequested();
 
 };
 

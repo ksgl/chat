@@ -1,3 +1,4 @@
+/*
 #ifndef ITASKEXECUTORCALLBACKBINDER_H
 #define ITASKEXECUTORCALLBACKBINDER_H
 
@@ -5,6 +6,7 @@
 
 #include <chat-lib_global.h>
 #include <framework/callback.h>
+#include <task-exec/json.hpp>
 
 namespace chat {
 namespace services {
@@ -22,6 +24,10 @@ public:
     virtual int FriendReceivedBinder(std::string* data) = 0;
     virtual int MessageReceivedBinder(std::string* data) = 0;
 
+    virtual void MessageReceivedFucntion(nlohmann::json json) = 0;
+
+
+
 };
 
 
@@ -30,3 +36,4 @@ public:
 }
 
 #endif // ITASKEXECUTORCALLBACKBINDER_H
+*/

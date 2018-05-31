@@ -8,6 +8,7 @@
 #include <framework/command.h>
 #include <controllers/i-command-controller.h>
 #include <controllers/i-navigation-controller.h>
+#include <models/chat-model.h>
 
 namespace chat {
 namespace controllers {
@@ -66,12 +67,12 @@ public slots:
     void onRefreshFriendListExecuted();
     void onFindNewFriendExecuted();
     void onAddToFriendsExecuted();
-    void onRequestsFriendsViewExecuted();
-    void onResponcesFriendsViewExecuted();
-    void onConfirmFriendRequest();
-    void onDeclineFriendRequest();
     void onExitExecuted();
     void onChatListViewExecuted();
+    void onChatDetailViewExecuted();
+    void onFriendListViewExcuted();
+    void onGoToFriendListView();
+    void onGoToChatListView();
 
 private:
     class Implementation;

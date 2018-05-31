@@ -41,6 +41,7 @@ public:
     explicit Message(QObject *parent = nullptr);
     Message(QObject *parent, const QJsonObject& json);
     Message(QObject *parent, const Message* other);
+    Message(QObject *parent, const Message& other);
 
     Message(QObject *parent, const QString& reference,
                              const QString& sender,
@@ -54,6 +55,7 @@ public:
     data::StringDecorator* reference{nullptr};
 
     data::StringDecorator* sender{nullptr};
+    data::StringDecorator* receiver_ip{nullptr};
     data::StringDecorator* receiver{nullptr};
     
     data::DateTimeDecorator* sendAt{nullptr};

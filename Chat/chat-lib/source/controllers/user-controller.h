@@ -13,24 +13,24 @@
 
 #include <controllers/friend-controller.h>
 #include <controllers/message-controller.h>
+#include <controllers/i-database-controller.h>
 
 namespace chat {
 namespace controllers {
 
-class CHATLIBSHARED_EXPORT UserController : public IUserController
+class CHATLIBSHARED_EXPORT UserController : public IUserController, public QObject
 {
     Q_OBJECT
 
 public:
     explicit UserController(QObject *parent = nullptr,
-                            FriendController* _friendCOntroller = nullptr,
-                            MessageController* _messageController = nullptr,
                             models::UserModel* user = nullptr);
     ~UserController();
 
-    //const models::UserModel* currentUser() const;
+    const models::UserModel* currentUser() const;
+    void uploadUser(QString userName);
     void setUser(chat::models::UserModel* _newUser);
-
+    QString currentUserName() const;
 public:
 
     /*------------------------------------------------------------------
@@ -59,13 +59,14 @@ public:
     /*
     void addChat(const chat::models::Friend* _friend);
     void addChat(const QString& friendReference);
-
-    //models::ChatModel* getChat(const QString& chatReference) const override;
+    */
+    models::ChatModel* getChat(const QString& chatReference) const override;
+    /*
     //models::ChatModel* getChatByFriend(const QString& friendReference) const;
     //models::ChatModel* getChatByFriendName(const QString& friendName) const;
     //models::ChatModel* getChatByFriend(const models::Friend* _friend) const;
-    QList<models::ChatModel*>& getChats() const;
     */
+    QList<models::ChatModel*>& getChatList() const;
 
     /*------------------------------------------------------------------
      * BLOCK "MESSAGE MANAGER" *
@@ -86,7 +87,7 @@ public:
     models::ChatModel* getChatByFriend(const QString& friendReference) const;
     models::Message* getMessageByChat(const models::ChatModel* _chat, const QString &messageReference) const;
     models::Message* getMessageByFriend(const QString& friendReference, const QString &messageReference) const;
-    models::Message* getMessage(const QString& messageReference) const = 0;
+    models::Message* getMessage(const QString& messageReference) const;
     models::Message::eMessageStatus getMessageStatus(const QString& messageReference) const;
     QList<models::Message*>& getMessageList(const models::ChatModel* _chat) const;
     QList<models::Message*>& getMessageListByFriend(const models::Friend* _friend) const;
@@ -100,6 +101,7 @@ public:
 private:
     class Implementation;
     QScopedPointer<Implementation> implementation;
+
 };
 
 }

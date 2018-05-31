@@ -26,13 +26,13 @@ Message::Message(QObject *parent)
     messageType = static_cast<EnumeratorDecorator*>(addDataItem(new EnumeratorDecorator(this, "messageType", "Message Type", 0, messageTypeMapper)));
     messageStatus = static_cast<EnumeratorDecorator*>(addDataItem(new EnumeratorDecorator(this, "messageStatus", "Message Status", 0, messageStatusMapper)));
 
-    sender = static_cast<StringDecorator*>(addDataItem(new StringDecorator(this, "sender" ,"Sender")));
-    receiver = static_cast<StringDecorator*>(addDataItem(new StringDecorator(this, "receiver", "Receiver")));
-
+    sender = static_cast<StringDecorator*>(addDataItem(new StringDecorator(this, "from" ,"from")));
+    receiver = static_cast<StringDecorator*>(addDataItem(new StringDecorator(this, "to", "to")));
+    receiver_ip = static_cast<StringDecorator*>(addDataItem(new StringDecorator(this, "to_ip", "to_ip")));
     sendAt = static_cast<DateTimeDecorator*>(addDataItem(new DateTimeDecorator(this, "sendAt", "Send At")));
     receivedAt = static_cast<DateTimeDecorator*>(addDataItem(new DateTimeDecorator(this, "receivedAt", "Received At")));
 
-    messageData = static_cast<StringDecorator*>(addDataItem(new StringDecorator(this, "messageData", "Message Data")));
+    messageData = static_cast<StringDecorator*>(addDataItem(new StringDecorator(this, "text", "text")));
 
     reference->setValue(this->id());
     setPrimaryKey(reference);
@@ -55,6 +55,31 @@ Message::Message(QObject *parent, const Message* other)
     Message::eMessageType type = static_cast<Message::eMessageType>(other->messageType->value());
     Message::eMessageStatus status = static_cast<Message::eMessageStatus>(other->messageStatus->value());
     QString data = other->messageData->value();
+
+    if (!newReference.isEmpty())
+    {
+        this->reference->setValue(newReference);
+    }
+    this->sender->setValue(newSender);
+    this->receiver->setValue(newReceiver);
+    this->sendAt->setValue(newSendAt);
+    this->receivedAt->setValue(newReceivedAt);
+    this->messageType->setValue(type);
+    this->messageStatus->setValue(status);
+    this->messageData->setValue(data);
+}
+
+Message::Message(QObject *parent, const Message& other)
+    : Message(parent)
+{
+    QString newReference = other.reference->value();
+    QString newSender = other.sender->value();
+    QString newReceiver = other.receiver->value();
+    QDateTime newSendAt = other.sendAt->value();
+    QDateTime newReceivedAt = other.receivedAt->value();
+    Message::eMessageType type = static_cast<Message::eMessageType>(other.messageType->value());
+    Message::eMessageStatus status = static_cast<Message::eMessageStatus>(other.messageStatus->value());
+    QString data = other.messageData->value();
 
     if (!newReference.isEmpty())
     {

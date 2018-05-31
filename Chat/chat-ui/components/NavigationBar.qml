@@ -25,13 +25,13 @@ Item {
                 iconCharacter: "\uf015"
                 description: "Chats"
                 hoverColour: "#dc8a00"
-                onNavigationButtonClicked: masterController.ui_navigationController.goChatListView();
+                onNavigationButtonClicked: masterController.ui_commandController.onChatListViewExecuted();
             }
             NavigationButton {
                 iconCharacter: "\uf234"
                 description: "Friends"
                 hoverColour: "#dccd00"
-                onNavigationButtonClicked: masterController.ui_navigationController.goFriendListView();
+                onNavigationButtonClicked: masterController.ui_commandController.onFriendListViewExcuted();
             }
             NavigationButton {
                 iconCharacter: "\uf002"

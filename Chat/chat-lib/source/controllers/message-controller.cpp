@@ -36,6 +36,7 @@ void MessageController::addMessage(chat::models::ChatModel* _chat, const models:
     {
         _chat->messages->addEntity(new Message(_chat, _message));
 
+        _chat->onMessagesChanged();
         emit messageAdded();
     }
 }
@@ -79,6 +80,7 @@ void MessageController::addMessage(chat::models::ChatModel* _chat,
 
         _chat->messages->addEntity(newMessage);
 
+        _chat->onMessagesChanged();
         emit messageAdded();
     }
 }
