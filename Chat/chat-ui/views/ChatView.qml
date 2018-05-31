@@ -25,16 +25,10 @@ Item {
             font.pixelSize: Style.pixelSizeDashboard
         }
     }
- //-------------------------------------------------------
+
     ListModel {
         id: sampleMessageModel
-
-        /*ListElement {
-            messageText: "Apple"
-        }*/
     }
-//-----------------------------------------------------
-
 
     ColumnLayout {
         anchors.fill: parent
@@ -48,44 +42,8 @@ Item {
             displayMarginEnd: 40
             //verticalLayoutDirection: ListView.BottomToTop
             spacing: 25
-            //model: 14
-            //model: newChatModel
-             model: sampleMessageModel
+            model: sampleMessageModel
 
-           /*delegate: Row{
-                readonly property bool sentByMe: index % 2 == 0
-
-                anchors.right: sentByMe ? parent.right : undefined
-                spacing: 6
-
-                Rectangle {
-                    id: avatar
-                    x:100
-                    width: height
-                    height: parent.height
-                    color: "grey"
-                    visible: !sentByMe
-                }
-
-                Rectangle {
-                    id: rectForMessage
-                    width: 80
-                    height: 40
-                    color: sentByMe ? "#d9d8e3" : "#8f79b0"
-                    radius: 7
-
-                    Label {
-                        id:messageLabel
-                        anchors.centerIn: parent
-                        Text { text: messageText }
-                        //text: index
-                        /*ItemDelegate {
-                            text: model.display
-                        }//
-                        color: sentByMe ? "black" : "white"
-                    }
-                }
-            }*/
              delegate: Column {
                  readonly property bool sentByMe: index % 2 == 0
 
@@ -99,9 +57,8 @@ Item {
 
                      Image {
                          id: avatar
-                         //source: !sentByMe ? "qrc:/" + model.author.replace(" ", "_") + ".png" : ""
-                          source: "../images/Albert_Einstein.png"
-                          visible: !sentByMe
+                         source: "../images/Albert_Einstein.png"
+                         visible: !sentByMe
                      }
 
                      Rectangle {
@@ -161,19 +118,7 @@ Item {
                     width: 70
                     height: 25
                     enabled: messageField.length > 0
-                    /*onFormButtonClicked: {
-                        listView.model.sendMessage(messageField.text)
-                        messageField.text = "";
-                    }*/
 
-                    /*onFormButtonClicked: {
-                        //ChatModel.ui_messages = messageField.text
-                       //listView.model.ui_messages = messageField.text
-                        newMessage.ui_messageData = messageField.text;
-                        newChatModel.addMessage();
-                        messageField.text = "";
-                        listView.update();
-                    }*/
                     onFormButtonClicked: {
                         sampleMessageModel.append({"messageText": messageField.text, "len": messageField.text.length})
                         messageField.text = "";
@@ -181,9 +126,7 @@ Item {
                     }
                 }
 
-
-                //StackView.view.push(...) - better way
-                FormButton {          //temporary
+                FormButton {
                     id: backButton
                     description: qsTr("Back")
                     iconCharacter: ""
@@ -192,17 +135,13 @@ Item {
                     x: 30
                     y: 100
                     onFormButtonClicked: contentFrame.replace("qrc:/views/ChatListView.qml")
-
                 }
             }
 
         }
-
-
     }
 
     CommandBar {
         id: commandBar
-        //commandList: masterController.ui_commandController.ui_chatListViewContextCommands
     }
 }

@@ -14,14 +14,6 @@ Window {
          id: navigationBar
          visible: false
      }
-   /* Rectangle {
-        id:chatAndSearchBar
-        x: navigationBar.width
-        width: 100
-        height: parent.height
-        color: red
-        visible: true
-    }*/
    Connections {
         target: masterController.ui_navigationController //в либах
         onGoChatListView: {

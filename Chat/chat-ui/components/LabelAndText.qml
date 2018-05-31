@@ -3,7 +3,6 @@ import assets 1.0
 
 Item {
     property alias textValue: label.text
-    //property alias number: Style.loginFieldPositionY
 
     Text {
         id:label
@@ -19,14 +18,7 @@ Item {
     Rectangle {
         id: fieldContainer
         x: 300
-        //x: parent.width / 2
         y: Style.loginFieldPositionY
-        /*anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.topMargin: 200
-        anchors.leftMargin: 300
-        anchors.rightMargin: 100*/
 
         width: 200
         height: 25
@@ -40,8 +32,7 @@ Item {
             x: 10
             y: 3
             width: parent.width - 12
-            height: parent.height
-            //text: qsTr("******")
+            height: parent.height           
             clip: true
             font.pixelSize: 12
         }

@@ -46,7 +46,6 @@ Item {
                 y: 3
                 width: parent.width - 12
                 height: parent.height
-                //text: qsTr("Text Input")
                 clip: true
                 font.pixelSize: 12
             }
@@ -65,12 +64,6 @@ Item {
             id: passwordFieldContainer
             x: parent.width / 2
             y: 250
-            /*anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.topMargin: 200
-            anchors.leftMargin: 300
-            anchors.rightMargin: 100*/
 
             width: 200
             height: 25
@@ -85,7 +78,6 @@ Item {
                 y: 3
                 width: parent.width - 12
                 height: parent.height
-                //text: qsTr("******")
                 clip: true
                 font.pixelSize: 12
             }

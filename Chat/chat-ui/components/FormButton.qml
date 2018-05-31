@@ -19,7 +19,6 @@ Item {
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
-                //margins: Style.heightFormButton / 4
             }
             font {
                 family: Style.fontAwesome
