@@ -54,7 +54,7 @@ namespace chat::implementation {
                     throw std::runtime_error("no callback registered for command id " + id);
                 }
 
-                command_callbacks_[id](command_json);
+                command_callbacks_[id](command_json.dump());
                 command_callbacks_.erase(id);
             }
             else {
