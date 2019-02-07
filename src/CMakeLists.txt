@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-add_executable(chat main.cpp)
-target_link_libraries(chat ${Boost_LIBRARIES})
-=======
 add_library(chat
     UDPRPCServer.cpp
     JSONTaskExecutor.cpp
@@ -24,4 +20,3 @@ find_package(Boost REQUIRED COMPONENTS filesystem)
 target_link_libraries(chat PUBLIC Boost::boost)
 target_link_libraries(chat PUBLIC Boost::disable_autolinking)
 target_link_libraries(chat PUBLIC Boost::filesystem)
->>>>>>> 90d7950429a3785269e42ccb4e1952015e385cdf
